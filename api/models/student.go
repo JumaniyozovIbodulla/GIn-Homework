@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Student struct {
 	Id         string `json:"id"`
 	FirstName  string `json:"first_name"`
@@ -7,17 +9,21 @@ type Student struct {
 	Age        int    `json:"age"`
 	ExternalId string `json:"external_id"`
 	Phone      string `json:"phone"`
-	Mail       string `json:"mail"`
+	Email      string `json:"email"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 type GetStudent struct {
-	Id         string `json:"id"`
-	FirstName  string `json:"first_name"`
-	LastName   string `json:"last_name"`
-	Age        int    `json:"age"`
-	ExternalId string `json:"external_id"`
-	Phone      string `json:"phone"`
-	Mail       string `json:"mail,omitempty"`
+	Id         string    `json:"id"`
+	FirstName  string    `json:"first_name,omitempty"`
+	LastName   string    `json:"last_name,omitempty"`
+	Age        int       `json:"age,omitempty"`
+	ExternalId string    `json:"external_id,omitempty"`
+	Phone      string    `json:"phone,omitempty"`
+	Email      string    `json:"email,omitempty"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 type GetAllStudentsRequest struct {

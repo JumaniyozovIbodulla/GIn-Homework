@@ -22,9 +22,11 @@ func (s *studentRepo) Create(student models.Student) (string, error) {
 
 	id := uuid.New()
 
-	query := ` INSERT INTO students (id, first_name, created_at) VALUES ($1, $2, NOW()) `
+	query := `
+	INSERT INTO
+		students (id, first_name, last_name, age, external_id, phone, email) VALUES ($1, $2, $3, $4, $5, $6, $7);`
 
-	_, err := s.db.Exec(query, id, student.FirstName)
+	_, err := s.db.Exec(query, id, student.FirstName, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
 	if err != nil {
 		return "", err
 	}
@@ -35,9 +37,34 @@ func (s *studentRepo) Create(student models.Student) (string, error) {
 func (s *studentRepo) Update(student models.Student) (string, error) {
 
 
-	query := ` UPDATE students set first_name = $1,updated_at = NOW() WHERE id = $2 `
+	query := `
+	UPDATE
+		students
+	SET
+		first_name = $2, last_name = $3, age = $4, external_id = $5, phone = $6, email = $7, updated_at = NOW()
+	WHERE 
+		id = $1 `
 
-	_, err := s.db.Exec(query, student.FirstName, student.Id)
+	_, err := s.db.Exec(query, student.Id, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
+	if err != nil {
+		return "", err
+	}
+
+	return student.Id, nil
+}
+
+
+func (s *studentRepo) Delete(student models.Student) (string, error) {
+
+
+	query := `
+	DELETE
+	FROM
+		students
+	WHERE 
+		id = $1 `
+
+	_, err := s.db.Exec(query, student.Id)
 	if err != nil {
 		return "", err
 	}
@@ -87,4 +114,38 @@ func (s *studentRepo) GetAll(req models.GetAllStudentsRequest) (models.GetAllStu
 	}
 
 	return resp, nil
+}
+
+
+
+func (s *studentRepo) GetStudent(req models.GetStudent) (models.GetStudent, error) {
+
+	query := `
+	SELECT
+		id,
+		first_name,
+		last_name,
+		age,
+		external_id,
+		phone,
+		email,
+		created_at,
+		updated_at
+	FROM
+		students
+	WHERE
+		id = $1;
+`
+	row := s.db.QueryRow(query, req.Id)
+
+	var student  models.GetStudent
+
+	err := row.Scan(&student.Id, &student.FirstName, &student.LastName, &student.Age, &student.ExternalId, &student.Phone, &student.Email, &student.CreatedAt, &student.UpdatedAt)
+	
+	if err != nil {
+		return student, nil
+	}
+
+
+	return student, nil
 }

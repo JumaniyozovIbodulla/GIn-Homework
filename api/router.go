@@ -14,7 +14,10 @@ func New(store storage.IStorage) *gin.Engine {
 
 	r.POST("/student", h.CreateStudent)
 	r.PUT("/student/:id", h.UpdateStudent)
-	r.GET("/student", h.GetAllStudents)
+	r.GET("/students", h.GetAllStudents)
+	r.DELETE("/student:id", h.DeleteStudent)
+	r.GET("/student:id", h.GetStudent)
 
 	return r
+
 }
