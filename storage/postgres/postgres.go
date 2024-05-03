@@ -3,35 +3,44 @@ package postgres
 import (
 	"backend_course/lms/config"
 	"backend_course/lms/storage"
-	"database/sql"
+	"context"
 	"fmt"
+	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
 )
 
 type Store struct {
-	DB *sql.DB
+	Pool *pgxpool.Pool
 }
 
-func New(cfg config.Config) (storage.IStorage, error) {
+func New(ctx context.Context, cfg config.Config) (storage.IStorage, error) {
 	url := fmt.Sprintf(`host=%s port=%v user=%s password=%s database=%s sslmode=disable`,
 		cfg.PostgresHost, cfg.PostgresPort, cfg.PostgresUser, cfg.PostgresPassword, cfg.PostgresDatabase)
 
-	db, err := sql.Open("postgres", url)
+	pgxPoolConfig, err := pgxpool.ParseConfig(url)
+
+	if err != nil {
+		return nil, err
+	}
+	pgxPoolConfig.MaxConns = 50
+	pgxPoolConfig.MaxConnLifetime = time.Hour
+
+	newPool, err := pgxpool.NewWithConfig(ctx, pgxPoolConfig)
 	if err != nil {
 		return nil, err
 	}
 
 	return Store{
-		DB: db,
+		Pool: newPool,
 	}, nil
 }
 func (s Store) CloseDB() {
-	s.DB.Close()
+	s.Pool.Close()
 }
 
 func (s Store) StudentStorage() storage.StudentStorage {
-	newStudent := NewStudent(s.DB)
-
+	newStudent := NewStudent(s.Pool)
 	return &newStudent
 }

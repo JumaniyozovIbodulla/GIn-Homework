@@ -3,16 +3,18 @@ package postgres
 import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/pkg"
+	"context"
 	"database/sql"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type studentRepo struct {
-	db *sql.DB
+	db *pgxpool.Pool
 }
 
-func NewStudent(db *sql.DB) studentRepo {
+func NewStudent(db *pgxpool.Pool) studentRepo {
 	return studentRepo{
 		db: db,
 	}
@@ -26,7 +28,7 @@ func (s *studentRepo) Create(student models.Student) (string, error) {
 	INSERT INTO
 		students (id, first_name, last_name, age, external_id, phone, email) VALUES ($1, $2, $3, $4, $5, $6, $7);`
 
-	_, err := s.db.Exec(query, id, student.FirstName, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
+	_, err := s.db.Exec(context.Background(), query, id, student.FirstName, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
 	if err != nil {
 		return "", err
 	}
@@ -35,8 +37,6 @@ func (s *studentRepo) Create(student models.Student) (string, error) {
 }
 
 func (s *studentRepo) Update(student models.Student) (string, error) {
-
-
 	query := `
 	UPDATE
 		students
@@ -45,18 +45,14 @@ func (s *studentRepo) Update(student models.Student) (string, error) {
 	WHERE 
 		id = $1 `
 
-	_, err := s.db.Exec(query, student.Id, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
+	_, err := s.db.Exec(context.Background(), query, student.Id, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
 	if err != nil {
 		return "", err
 	}
-
 	return student.Id, nil
 }
 
-
-func (s *studentRepo) Delete(student models.Student) (string, error) {
-
-
+func (s *studentRepo) Delete(id string) error {
 	query := `
 	DELETE
 	FROM
@@ -64,12 +60,12 @@ func (s *studentRepo) Delete(student models.Student) (string, error) {
 	WHERE 
 		id = $1 `
 
-	_, err := s.db.Exec(query, student.Id)
+	_, err := s.db.Exec(context.Background(), query, id)
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	return student.Id, nil
+	return nil
 }
 
 func (s *studentRepo) GetAll(req models.GetAllStudentsRequest) (models.GetAllStudentsResponse, error) {
@@ -88,7 +84,7 @@ func (s *studentRepo) GetAll(req models.GetAllStudentsRequest) (models.GetAllStu
 				WHERE TRUE ` + filter + `
 				OFFSET $1 LIMIT $2
 					`
-	rows, err := s.db.Query(query, offest, req.Limit)
+	rows, err := s.db.Query(context.Background(), query, offest, req.Limit)
 	if err != nil {
 		return resp, err
 	}
@@ -108,7 +104,7 @@ func (s *studentRepo) GetAll(req models.GetAllStudentsRequest) (models.GetAllStu
 		resp.Students = append(resp.Students, student)
 	}
 
-	err = s.db.QueryRow(`SELECT count(*) from students WHERE TRUE ` + filter + ``).Scan(&resp.Count)
+	err = s.db.QueryRow(context.Background(), `SELECT count(*) from students WHERE TRUE ` + filter + ``).Scan(&resp.Count)
 	if err != nil {
 		return resp, err
 	}
@@ -116,9 +112,7 @@ func (s *studentRepo) GetAll(req models.GetAllStudentsRequest) (models.GetAllStu
 	return resp, nil
 }
 
-
-
-func (s *studentRepo) GetStudent(req models.GetStudent) (models.GetStudent, error) {
+func (s *studentRepo) GetStudent(id string) (models.GetStudent, error) {
 
 	query := `
 	SELECT
@@ -136,16 +130,15 @@ func (s *studentRepo) GetStudent(req models.GetStudent) (models.GetStudent, erro
 	WHERE
 		id = $1;
 `
-	row := s.db.QueryRow(query, req.Id)
+	row := s.db.QueryRow(context.Background(), query, id)
 
-	var student  models.GetStudent
+	var student models.GetStudent
 
 	err := row.Scan(&student.Id, &student.FirstName, &student.LastName, &student.Age, &student.ExternalId, &student.Phone, &student.Email, &student.CreatedAt, &student.UpdatedAt)
-	
+
 	if err != nil {
 		return student, nil
 	}
-
 
 	return student, nil
 }
