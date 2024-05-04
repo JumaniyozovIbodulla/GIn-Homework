@@ -125,8 +125,8 @@ func (h Handler) GetTeacher(c *gin.Context) {
 	handleResponse(c, "Got successfully", http.StatusOK, std)
 }
 
-// @Router		/teacher [GET]
-// @Summary		Get  teacher
+// @Router		/teachers [GET]
+// @Summary		Get  all teachers
 // @Description	This api get all teachers
 // @Tags		teacher
 // @Accept		json

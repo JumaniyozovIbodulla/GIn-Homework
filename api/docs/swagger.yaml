@@ -259,39 +259,6 @@ paths:
       tags:
       - student
   /teacher:
-    get:
-      consumes:
-      - application/json
-      description: This api get all teachers
-      parameters:
-      - description: teacher
-        in: body
-        name: teacher
-        required: true
-        schema:
-          $ref: '#/definitions/models.Teacher'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/models.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.Response'
-      summary: Get  teacher
-      tags:
-      - teacher
     post:
       consumes:
       - application/json
@@ -423,6 +390,40 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: update a teacher
+      tags:
+      - teacher
+  /teachers:
+    get:
+      consumes:
+      - application/json
+      description: This api get all teachers
+      parameters:
+      - description: teacher
+        in: body
+        name: teacher
+        required: true
+        schema:
+          $ref: '#/definitions/models.Teacher'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Get  all teachers
       tags:
       - teacher
 swagger: "2.0"
