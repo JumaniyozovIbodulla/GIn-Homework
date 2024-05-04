@@ -5,6 +5,7 @@ import (
 	"backend_course/lms/pkg"
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -46,6 +47,29 @@ func (s *studentRepo) Update(student models.Student) (string, error) {
 		id = $1 `
 
 	_, err := s.db.Exec(context.Background(), query, student.Id, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
+	if err != nil {
+		return "", err
+	}
+	return student.Id, nil
+}
+
+func (s *studentRepo) UpdateStatus(student models.Student) (string, error) {
+	fmt.Println(student.IsActive)
+	if student.IsActive {
+		student.IsActive = false
+	} else {
+		student.IsActive = true
+	}
+	fmt.Println(student.IsActive)
+	query := `
+	UPDATE
+		students
+	SET
+	is_active = $2
+	WHERE 
+		id = $1;`
+
+	_, err := s.db.Exec(context.Background(), query, student.Id, student.IsActive)
 	if err != nil {
 		return "", err
 	}
@@ -104,7 +128,7 @@ func (s *studentRepo) GetAll(req models.GetAllStudentsRequest) (models.GetAllStu
 		resp.Students = append(resp.Students, student)
 	}
 
-	err = s.db.QueryRow(context.Background(), `SELECT count(*) from students WHERE TRUE ` + filter + ``).Scan(&resp.Count)
+	err = s.db.QueryRow(context.Background(), `SELECT count(*) from students WHERE TRUE `+filter+``).Scan(&resp.Count)
 	if err != nil {
 		return resp, err
 	}

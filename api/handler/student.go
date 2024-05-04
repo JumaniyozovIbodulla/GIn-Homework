@@ -81,6 +81,50 @@ func (h Handler) UpdateStudent(c *gin.Context) {
 	handleResponse(c, "Updated successfully", http.StatusOK, id)
 }
 
+
+
+// @Router		/student/{id} [PATCH]
+// @Summary		update a student's status
+// @Description	This api update a student's status and returns its id
+// @Tags		student
+// @Accept		json
+// @Produce		json
+// @Param		student body models.Student true "student"
+// @Success		200  {object}  models.Response
+// @Failure		400  {object}  models.Response
+// @Failure		404  {object}  models.Response
+// @Failure		500  {object}  models.Response
+func (h Handler) UpdateStudentStatus(c *gin.Context) {
+
+	student := models.Student{}
+
+	id := c.Param("id")
+	if err := uuid.Validate(id); err != nil {
+		handleResponse(c, "error while validating studentId", http.StatusBadRequest, err.Error())
+		return
+	}
+	student.Id = id
+
+	if err := c.ShouldBindJSON(&student); err != nil {
+		handleResponse(c, "error while reading request body", http.StatusBadRequest, err.Error())
+		return
+	}
+	id, err := h.Store.StudentStorage().UpdateStatus(student)
+	if err != nil {
+		handleResponse(c, "error while updating student", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	handleResponse(c, "Updated successfully", http.StatusOK, id)
+}
+
+
+
+
+
+
+
+
 // @Router		/student/{id} [DELETE]
 // @Summary		delete a student
 // @Description	This api delete a student

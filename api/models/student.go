@@ -3,15 +3,16 @@ package models
 import "time"
 
 type Student struct {
-	Id         string `json:"id"`
-	FirstName  string `json:"first_name"`
-	LastName   string `json:"last_name"`
-	Age        int    `json:"age"`
-	ExternalId string `json:"external_id"`
-	Phone      string `json:"phone"`
-	Email      string `json:"email"`
+	Id         string    `json:"id"`
+	FirstName  string    `json:"first_name"`
+	LastName   string    `json:"last_name"`
+	Age        int       `json:"age"`
+	ExternalId string    `json:"external_id"`
+	Phone      string    `json:"phone"`
+	Email      string    `json:"mail"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
+	IsActive   bool      `json:"is_active"`
 }
 
 type GetStudent struct {
@@ -24,6 +25,7 @@ type GetStudent struct {
 	Email      string    `json:"email,omitempty"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
+	IsActive   bool      `json:"is_active"`
 }
 
 type GetAllStudentsRequest struct {

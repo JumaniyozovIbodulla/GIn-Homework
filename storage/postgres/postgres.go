@@ -44,3 +44,9 @@ func (s Store) StudentStorage() storage.StudentStorage {
 	newStudent := NewStudent(s.Pool)
 	return &newStudent
 }
+
+
+func (s Store) TeacherStorage() storage.TeacherStorage {
+	newTeacher := NewTeacher(s.Pool)
+	return &newTeacher
+}
