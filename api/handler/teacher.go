@@ -103,7 +103,7 @@ func (h Handler) DeleteTeacher(c *gin.Context) {
 // @Tags		teacher
 // @Accept		json
 // @Produce		json
-// @Param		teacher body models.teacher true "teacher"
+// @Param		teacher body models.Teacher true "teacher"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response

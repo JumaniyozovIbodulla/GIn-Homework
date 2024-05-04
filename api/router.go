@@ -24,7 +24,6 @@ func New(store storage.IStorage) *gin.Engine {
 	r.GET("/students", h.GetAllStudents)
 	r.DELETE("/student/:id", h.DeleteStudent)
 	r.GET("/student/:id", h.GetStudent)
-
 	r.POST("/teacher", h.CreateTeacher)
 	r.PUT("/teacher/:id", h.UpdateTeacher)
 	r.GET("/teachers", h.GetAllTeachers)

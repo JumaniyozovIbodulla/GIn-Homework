@@ -24,6 +24,6 @@ type GetAllTeachersRequest struct {
 
 
 type GetAllTeachersResponse struct {
-	Teachers []Teacher `json:"students"`
+	Teachers []Teacher `json:"teachers"`
 	Count    int64        `json:"count"`
 }
