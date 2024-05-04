@@ -5,6 +5,7 @@ import (
 	"backend_course/lms/pkg"
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -135,9 +136,10 @@ func (s *teacherRepo) GetTeacher(id string) (models.Teacher, error) {
 	var teacher models.Teacher
 
 	err := row.Scan(&teacher.Id, &teacher.FirstName, &teacher.LastName, &teacher.SubjectId, &teacher.StartWorking, &teacher.Phone, &teacher.Email, &teacher.CreatedAt, &teacher.UpdatedAt)
-
+	fmt.Println(teacher.Id, teacher.FirstName)
+	fmt.Println(err)
 	if err != nil {
-		return teacher, nil
+		return teacher, err
 	}
 
 	return teacher, nil
