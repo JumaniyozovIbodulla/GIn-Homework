@@ -36,7 +36,7 @@ func (h Handler) CreateStudent(c *gin.Context) {
 		return
 	}
 
-	id, err := h.Store.StudentStorage().Create(student)
+	id, err := h.Store.StudentStorage().Create(c.Request.Context(), student)
 	if err != nil {
 		handleResponse(c, "error while creating student", http.StatusBadRequest, err.Error())
 		return
@@ -72,7 +72,7 @@ func (h Handler) UpdateStudent(c *gin.Context) {
 		handleResponse(c, "error while reading request body", http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.Store.StudentStorage().Update(student)
+	id, err := h.Store.StudentStorage().Update(c.Request.Context(), student)
 	if err != nil {
 		handleResponse(c, "error while updating student", http.StatusInternalServerError, err.Error())
 		return
@@ -109,7 +109,7 @@ func (h Handler) UpdateStudentStatus(c *gin.Context) {
 		handleResponse(c, "error while reading request body", http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.Store.StudentStorage().UpdateStatus(student)
+	id, err := h.Store.StudentStorage().UpdateStatus(c.Request.Context(), student)
 	if err != nil {
 		handleResponse(c, "error while updating student", http.StatusInternalServerError, err.Error())
 		return
@@ -142,7 +142,7 @@ func (h Handler) DeleteStudent(c *gin.Context) {
 		handleResponse(c, "error while validating studentId", http.StatusBadRequest, err.Error())
 		return
 	}
-	if err := h.Store.StudentStorage().Delete(id); err != nil {
+	if err := h.Store.StudentStorage().Delete(c.Request.Context(), id); err != nil {
 		handleResponse(c, "error while deleting student", http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -170,7 +170,7 @@ func (h Handler) GetStudent(c *gin.Context) {
 		return
 	}
 
-	std, err := h.Store.StudentStorage().GetStudent(id)
+	std, err := h.Store.StudentStorage().GetStudent(c.Request.Context(), id)
 	if err != nil {
 		handleResponse(c, "error while getting student", http.StatusInternalServerError, err.Error())
 		return
@@ -204,7 +204,7 @@ func (h Handler) GetAllStudents(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.Store.StudentStorage().GetAll(models.GetAllStudentsRequest{
+	resp, err := h.Store.StudentStorage().GetAll(c.Request.Context(), models.GetAllStudentsRequest{
 		Search: search,
 		Page:   page,
 		Limit:  limit,

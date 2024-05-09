@@ -21,7 +21,7 @@ func NewTeacher(db *pgxpool.Pool) teacherRepo {
 	}
 }
 
-func (s *teacherRepo) Create(teacher models.Teacher) (string, error) {
+func (s *teacherRepo) Create(ctx context.Context, teacher models.Teacher) (string, error) {
 
 	id := uuid.New()
 
@@ -29,7 +29,7 @@ func (s *teacherRepo) Create(teacher models.Teacher) (string, error) {
 	INSERT INTO
 		teachers (id, first_name, last_name, subject_id, start_working, phone, mail) VALUES ($1, $2, $3, $4, $5, $6, $7);`
 
-	_, err := s.db.Exec(context.Background(), query, id, teacher.FirstName, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email)
+	_, err := s.db.Exec(ctx, query, id, teacher.FirstName, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email)
 	if err != nil {
 		return "", err
 	}
@@ -37,7 +37,7 @@ func (s *teacherRepo) Create(teacher models.Teacher) (string, error) {
 	return id.String(), nil
 }
 
-func (s *teacherRepo) Update(teacher models.Teacher) (string, error) {
+func (s *teacherRepo) Update(ctx context.Context, teacher models.Teacher) (string, error) {
 	query := `
 	UPDATE
 		teachers
@@ -46,14 +46,14 @@ func (s *teacherRepo) Update(teacher models.Teacher) (string, error) {
 	WHERE 
 		id = $1 `
 
-	_, err := s.db.Exec(context.Background(), query, teacher.Id, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email)
+	_, err := s.db.Exec(ctx, query, teacher.Id, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email)
 	if err != nil {
 		return "", err
 	}
 	return teacher.Id, nil
 }
 
-func (s *teacherRepo) Delete(id string) error {
+func (s *teacherRepo) Delete(ctx context.Context, id string) error {
 	query := `
 	DELETE
 	FROM
@@ -61,7 +61,7 @@ func (s *teacherRepo) Delete(id string) error {
 	WHERE 
 		id = $1 `
 
-	_, err := s.db.Exec(context.Background(), query, id)
+	_, err := s.db.Exec(ctx, query, id)
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func (s *teacherRepo) Delete(id string) error {
 	return nil
 }
 
-func (s *teacherRepo) GetAll(req models.GetAllTeachersRequest) (models.GetAllTeachersResponse, error) {
+func (s *teacherRepo) GetAll(ctx context.Context, req models.GetAllTeachersRequest) (models.GetAllTeachersResponse, error) {
 	resp := models.GetAllTeachersResponse{}
 	filter := ""
 	offest := (req.Page - 1) * req.Limit
@@ -85,7 +85,7 @@ func (s *teacherRepo) GetAll(req models.GetAllTeachersRequest) (models.GetAllTea
 				WHERE TRUE ` + filter + `
 				OFFSET $1 LIMIT $2
 					`
-	rows, err := s.db.Query(context.Background(), query, offest, req.Limit)
+	rows, err := s.db.Query(ctx, query, offest, req.Limit)
 	if err != nil {
 		return resp, err
 	}
@@ -105,7 +105,7 @@ func (s *teacherRepo) GetAll(req models.GetAllTeachersRequest) (models.GetAllTea
 		resp.Teachers = append(resp.Teachers, teacher)
 	}
 
-	err = s.db.QueryRow(context.Background(), `SELECT count(*) from teachers WHERE TRUE `+filter+``).Scan(&resp.Count)
+	err = s.db.QueryRow(ctx, `SELECT count(*) from teachers WHERE TRUE `+filter+``).Scan(&resp.Count)
 	if err != nil {
 		return resp, err
 	}
@@ -113,7 +113,7 @@ func (s *teacherRepo) GetAll(req models.GetAllTeachersRequest) (models.GetAllTea
 	return resp, nil
 }
 
-func (s *teacherRepo) GetTeacher(id string) (models.Teacher, error) {
+func (s *teacherRepo) GetTeacher(ctx context.Context, id string) (models.Teacher, error) {
 
 	query := `
 	SELECT
@@ -131,7 +131,7 @@ func (s *teacherRepo) GetTeacher(id string) (models.Teacher, error) {
 	WHERE
 		id = $1;
 `
-	row := s.db.QueryRow(context.Background(), query, id)
+	row := s.db.QueryRow(ctx, query, id)
 
 	var teacher models.Teacher
 
@@ -141,6 +141,5 @@ func (s *teacherRepo) GetTeacher(id string) (models.Teacher, error) {
 	if err != nil {
 		return teacher, err
 	}
-
 	return teacher, nil
 }

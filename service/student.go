@@ -3,6 +3,7 @@ package service
 import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/storage"
+	"context"
 	"fmt"
 )
 
@@ -14,9 +15,9 @@ func NewStudentService(storage storage.IStorage) studentService {
 	return studentService{storage: storage}
 }
 
-func (s studentService) Create(student models.Student) (string, error) {
+func (s studentService) Create(ctx context.Context, student models.Student) (string, error) {
 	// business logic
-	id, err := s.storage.StudentStorage().Create(student)
+	id, err := s.storage.StudentStorage().Create(ctx, student)
 	if err != nil {
 		fmt.Println("error while creating student, err: ", err)
 		return "", err

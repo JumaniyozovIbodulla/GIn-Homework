@@ -1,31 +1,29 @@
 package models
 
-import "time"
-
 type Student struct {
-	Id         string    `json:"id"`
-	FirstName  string    `json:"first_name"`
-	LastName   string    `json:"last_name"`
-	Age        int       `json:"age"`
-	ExternalId string    `json:"external_id"`
-	Phone      string    `json:"phone"`
-	Email      string    `json:"mail"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
-	IsActive   bool      `json:"is_active"`
+	Id         string `json:"id"`
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	Age        int    `json:"age"`
+	ExternalId string `json:"external_id"`
+	Phone      string `json:"phone"`
+	Email      string `json:"mail"`
+	CreatedAt  string `json:"created_at"`
+	UpdatedAt  string `json:"updated_at"`
+	IsActive   bool   `json:"is_active"`
 }
 
 type GetStudent struct {
-	Id         string    `json:"id"`
-	FirstName  string    `json:"first_name,omitempty"`
-	LastName   string    `json:"last_name,omitempty"`
-	Age        int       `json:"age,omitempty"`
-	ExternalId string    `json:"external_id,omitempty"`
-	Phone      string    `json:"phone,omitempty"`
-	Email      string    `json:"email,omitempty"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
-	IsActive   bool      `json:"is_active"`
+	Id         string `json:"id"`
+	FirstName  string `json:"first_name,omitempty"`
+	LastName   string `json:"last_name,omitempty"`
+	Age        int    `json:"age,omitempty"`
+	ExternalId string `json:"external_id,omitempty"`
+	Phone      string `json:"phone,omitempty"`
+	Email      string `json:"email,omitempty"`
+	CreatedAt  string `json:"created_at"`
+	UpdatedAt  string `json:"updated_at"`
+	IsActive   bool   `json:"is_active"`
 }
 
 type GetAllStudentsRequest struct {

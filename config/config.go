@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -18,16 +18,16 @@ type Config struct {
 
 func Load() Config {
 
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("error!!!", err)
+	if err := godotenv.Load("/home/acer/golang/lms/.env"); err != nil {
+		log.Fatal("no .env file: ", err)
 	}
 	cfg := Config{}
 
 	cfg.PostgresHost = cast.ToString(getOrReturnDefault("POSTGRES_HOST", "localhost"))
 	cfg.PostgresPort = cast.ToInt(getOrReturnDefault("POSTGRES_PORT", 5432))
-	cfg.PostgresDatabase = cast.ToString(getOrReturnDefault("POSTGRES_DATABASE", "backend_course"))
-	cfg.PostgresUser = cast.ToString(getOrReturnDefault("POSTGRES_USER", "postgres"))
-	cfg.PostgresPassword = cast.ToString(getOrReturnDefault("POSTGRES_PASSWORD", "1"))
+	cfg.PostgresDatabase = cast.ToString(getOrReturnDefault("POSTGRES_DATABASE", "gin1"))
+	cfg.PostgresUser = cast.ToString(getOrReturnDefault("POSTGRES_USER", "golang"))
+	cfg.PostgresPassword = cast.ToString(getOrReturnDefault("POSTGRES_PASSWORD", "golang"))
 
 	return cfg
 }

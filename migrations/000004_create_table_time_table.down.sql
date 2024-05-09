@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS "time_table";
+DROP TABLE IF EXISTS "subjects";

@@ -28,7 +28,7 @@ func (h Handler) CreateTeacher(c *gin.Context) {
 		return
 	}
 
-	id, err := h.Store.TeacherStorage().Create(teacher)
+	id, err := h.Store.TeacherStorage().Create(c.Request.Context(), teacher)
 	if err != nil {
 		handleResponse(c, "error while creating teacher", http.StatusBadRequest, err.Error())
 		return
@@ -63,7 +63,7 @@ func (h Handler) UpdateTeacher(c *gin.Context) {
 		handleResponse(c, "error while reading request body", http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.Store.TeacherStorage().Update(teacher)
+	id, err := h.Store.TeacherStorage().Update(c.Request.Context(), teacher)
 	if err != nil {
 		handleResponse(c, "error while updating teacher", http.StatusInternalServerError, err.Error())
 		return
@@ -89,7 +89,7 @@ func (h Handler) DeleteTeacher(c *gin.Context) {
 		handleResponse(c, "error while validating teacherId", http.StatusBadRequest, err.Error())
 		return
 	}
-	if err := h.Store.TeacherStorage().Delete(id); err != nil {
+	if err := h.Store.TeacherStorage().Delete(c.Request.Context(), id); err != nil {
 		handleResponse(c, "error while deleting teacher", http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -116,7 +116,7 @@ func (h Handler) GetTeacher(c *gin.Context) {
 		return
 	}
 
-	std, err := h.Store.TeacherStorage().GetTeacher(id)
+	std, err := h.Store.TeacherStorage().GetTeacher(c.Request.Context(), id)
 	if err != nil {
 		handleResponse(c, "error while getting teacher", http.StatusInternalServerError, err.Error())
 		return
@@ -150,7 +150,7 @@ func (h Handler) GetAllTeachers(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.Store.TeacherStorage().GetAll(models.GetAllTeachersRequest{
+	resp, err := h.Store.TeacherStorage().GetAll(c.Request.Context(), models.GetAllTeachersRequest{
 		Limit: limit,
 		Page: page,
 		Search: search,

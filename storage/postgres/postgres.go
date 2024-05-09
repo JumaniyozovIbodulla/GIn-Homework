@@ -50,3 +50,13 @@ func (s Store) TeacherStorage() storage.TeacherStorage {
 	newTeacher := NewTeacher(s.Pool)
 	return &newTeacher
 }
+
+func (s Store) SubjectsStorage() storage.SubjectStorage {
+	newsubject := NewSubject(s.Pool)
+	return &newsubject
+}
+
+func (s Store) TimeStorage() storage.TimeStorage {
+	newTime := NewTime(s.Pool)
+	return &newTime
+}
