@@ -79,7 +79,7 @@ func (h Handler) UpdateSubject(c *gin.Context) {
 // @Tags		subject
 // @Accept		json
 // @Produce		json
-// @Param		subject body models.Subjects true "subject"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -104,7 +104,7 @@ func (h Handler) DeleteSubject(c *gin.Context) {
 // @Tags		subject
 // @Accept		json
 // @Produce		json
-// @Param		subject body models.Subject true "subject"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -132,7 +132,7 @@ func (h Handler) GetSubject(c *gin.Context) {
 // @Tags		subject
 // @Accept		json
 // @Produce		json
-// @Param		subject body models.Subject true "subject"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response

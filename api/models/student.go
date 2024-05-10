@@ -13,6 +13,16 @@ type Student struct {
 	IsActive   bool   `json:"is_active"`
 }
 
+type AddStudent struct {
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	Age        int    `json:"age"`
+	ExternalId string `json:"external_id"`
+	Phone      string `json:"phone"`
+	Email      string `json:"mail"`
+	IsActive   bool   `json:"is_active"`
+}
+
 type GetStudent struct {
 	Id         string `json:"id"`
 	FirstName  string `json:"first_name,omitempty"`

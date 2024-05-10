@@ -18,7 +18,7 @@ import (
 // @Tags		student
 // @Accept		json
 // @Produce		json
-// @Param		student body models.Student true "student"
+// @Param		student body models.AddStudent true "student"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -131,7 +131,7 @@ func (h Handler) UpdateStudentStatus(c *gin.Context) {
 // @Tags		student
 // @Accept		json
 // @Produce		json
-// @Param		student body models.Student true "student"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -157,7 +157,7 @@ func (h Handler) DeleteStudent(c *gin.Context) {
 // @Tags		student
 // @Accept		json
 // @Produce		json
-// @Param		student body models.Student true "student"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -185,7 +185,7 @@ func (h Handler) GetStudent(c *gin.Context) {
 // @Tags		student
 // @Accept		json
 // @Produce		json
-// @Param		student body models.Student true "student"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response

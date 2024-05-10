@@ -76,7 +76,13 @@ func (s *timeRepo) GetAll(ctx context.Context, req models.GetAllTimeRequest) (mo
 
 	query := `
 	SELECT
-		*
+		id,
+		teacher_id,
+		student_id,
+		subject_id,
+
+		TO_CHAR(from_date,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(to_date,'YYYY-MM-DD HH:MM:SS')
 	FROM 
 		time_table
 	WHERE 
@@ -115,7 +121,13 @@ func (s *timeRepo) GetTime(ctx context.Context, id string) (models.Time, error) 
 
 	query := `
 	SELECT
-		*
+		id,
+		teacher_id,
+		student_id,
+		subject_id,
+
+		TO_CHAR(from_date,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(to_date,'YYYY-MM-DD HH:MM:SS')
 	FROM
 		time_table
 	WHERE

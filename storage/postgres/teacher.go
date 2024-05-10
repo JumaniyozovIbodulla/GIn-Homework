@@ -124,8 +124,8 @@ func (s *teacherRepo) GetTeacher(ctx context.Context, id string) (models.Teacher
 		start_working,
 		phone,
 		mail,
-		created_at,
-		updated_at
+		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS')
 	FROM
 		teachers
 	WHERE

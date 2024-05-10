@@ -76,7 +76,11 @@ func (s *subjectsRepo) GetAll(ctx context.Context, req models.GetAllSubjectsRequ
 
 	query := `
 	SELECT
-		*
+		id,
+		name,
+		type
+		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS')
 	FROM 
 		subjects
 	WHERE 
@@ -114,7 +118,11 @@ func (s *subjectsRepo) GetSubject(ctx context.Context, id string) (models.Subjec
 
 	query := `
 	SELECT
-		*
+		id,
+		name,
+		type
+		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS')
 	FROM
 		subjects
 	WHERE

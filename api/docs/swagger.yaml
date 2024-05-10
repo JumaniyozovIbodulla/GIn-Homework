@@ -1,4 +1,21 @@
 definitions:
+  models.AddStudent:
+    properties:
+      age:
+        type: integer
+      external_id:
+        type: string
+      first_name:
+        type: string
+      is_active:
+        type: boolean
+      last_name:
+        type: string
+      mail:
+        type: string
+      phone:
+        type: string
+    type: object
   models.Response:
     properties:
       data: {}
@@ -26,6 +43,19 @@ definitions:
       mail:
         type: string
       phone:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Subjects:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      type:
         type: string
       updated_at:
         type: string
@@ -68,7 +98,7 @@ paths:
         name: student
         required: true
         schema:
-          $ref: '#/definitions/models.Student'
+          $ref: '#/definitions/models.AddStudent'
       produces:
       - application/json
       responses:
@@ -97,12 +127,11 @@ paths:
       - application/json
       description: This api delete a student
       parameters:
-      - description: student
-        in: body
-        name: student
+      - description: id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.Student'
+        type: string
       produces:
       - application/json
       responses:
@@ -130,12 +159,11 @@ paths:
       - application/json
       description: This api get a student
       parameters:
-      - description: student
-        in: body
-        name: student
+      - description: id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.Student'
+        type: string
       produces:
       - application/json
       responses:
@@ -230,12 +258,11 @@ paths:
       - application/json
       description: This api get all students
       parameters:
-      - description: student
-        in: body
-        name: student
+      - description: id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.Student'
+        type: string
       produces:
       - application/json
       responses:
@@ -258,6 +285,171 @@ paths:
       summary: Get  students
       tags:
       - student
+  /subject:
+    post:
+      consumes:
+      - application/json
+      description: This api create a subject and returns its id
+      parameters:
+      - description: subject
+        in: body
+        name: subject
+        required: true
+        schema:
+          $ref: '#/definitions/models.Subjects'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: create a subject
+      tags:
+      - subject
+  /subject/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: This api delete a subject
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: delete a subject
+      tags:
+      - subject
+    get:
+      consumes:
+      - application/json
+      description: This api get a subject
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Get a subject
+      tags:
+      - subject
+    put:
+      consumes:
+      - application/json
+      description: This api update a subject and returns its id
+      parameters:
+      - description: subject
+        in: body
+        name: subject
+        required: true
+        schema:
+          $ref: '#/definitions/models.Subjects'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: update a subject
+      tags:
+      - subject
+  /subjects:
+    get:
+      consumes:
+      - application/json
+      description: This api get all subjects
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Get  subjects
+      tags:
+      - subject
   /teacher:
     post:
       consumes:
@@ -298,12 +490,11 @@ paths:
       - application/json
       description: This api delete a teacher
       parameters:
-      - description: teacher
-        in: body
-        name: teacher
+      - description: id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.Teacher'
+        type: string
       produces:
       - application/json
       responses:
@@ -331,12 +522,11 @@ paths:
       - application/json
       description: This api get a teacher
       parameters:
-      - description: teacher
-        in: body
-        name: teacher
+      - description: id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.Teacher'
+        type: string
       produces:
       - application/json
       responses:
@@ -366,7 +556,7 @@ paths:
       parameters:
       - description: teacher
         in: body
-        name: student
+        name: teacher
         required: true
         schema:
           $ref: '#/definitions/models.Teacher'
@@ -398,12 +588,11 @@ paths:
       - application/json
       description: This api get all teachers
       parameters:
-      - description: teacher
-        in: body
-        name: teacher
+      - description: id
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/models.Teacher'
+        type: string
       produces:
       - application/json
       responses:
@@ -426,4 +615,169 @@ paths:
       summary: Get  all teachers
       tags:
       - teacher
+  /time:
+    post:
+      consumes:
+      - application/json
+      description: This api create a time table and returns its id
+      parameters:
+      - description: time table
+        in: body
+        name: time_table
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: create a time table
+      tags:
+      - time_table
+  /time-tables:
+    get:
+      consumes:
+      - application/json
+      description: This api get all time tables
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Get  time tables
+      tags:
+      - time_table
+  /time/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: This api delete a time table
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: delete a time table
+      tags:
+      - time_table
+    get:
+      consumes:
+      - application/json
+      description: This api get a time_table
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Get a time table
+      tags:
+      - time_table
+    put:
+      consumes:
+      - application/json
+      description: This api update a time table and returns its id
+      parameters:
+      - description: time table
+        in: body
+        name: time_table
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: update a time table
+      tags:
+      - time_table
 swagger: "2.0"

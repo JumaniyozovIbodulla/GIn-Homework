@@ -31,6 +31,17 @@ func New(store storage.IStorage, service service.IServiceManager) *gin.Engine {
 	r.GET("/teachers", h.GetAllTeachers)
 	r.DELETE("/teacher/:id", h.DeleteTeacher)
 	r.GET("/teacher/:id", h.GetTeacher)
+	r.POST("/subject", h.CreateSubject)
+	r.PUT("/subject/:id", h.UpdateSubject)
+	r.DELETE("/subject/:id", h.DeleteSubject)
+	r.GET("/subject/:id", h.GetSubject)
+	r.GET("/subjects", h.GetAllSubjects)
+	r.POST("/time", h.CreateTime)
+	r.PUT("/time/:id", h.UpdateTime)
+	r.DELETE("/time/:id", h.DeleteTime)
+	r.GET("/time/:id", h.GetTime)
+	r.GET("/time-tables", h.GetAllTimeTables)
+	
 	
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

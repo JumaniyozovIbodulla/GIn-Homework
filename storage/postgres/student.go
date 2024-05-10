@@ -147,8 +147,8 @@ func (s *studentRepo) GetStudent(ctx context.Context, id string) (models.GetStud
 		external_id,
 		phone,
 		mail,
-		created_at,
-		updated_at
+		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS')
 	FROM
 		students
 	WHERE
@@ -156,9 +156,16 @@ func (s *studentRepo) GetStudent(ctx context.Context, id string) (models.GetStud
 `
 	row := s.db.QueryRow(ctx, query, id)
 
-	var student models.GetStudent
+	var (
+		student models.GetStudent
+		lastName, updatedAt sql.NullString
+	)
 
-	err := row.Scan(&student.Id, &student.FirstName, &student.LastName, &student.Age, &student.ExternalId, &student.Phone, &student.Email, &student.CreatedAt, &student.UpdatedAt)
+	err := row.Scan(&student.Id, &student.FirstName, &lastName, &student.Age, &student.ExternalId, &student.Phone, &student.Email, &student.CreatedAt, &updatedAt)
+
+	student.LastName = pkg.NullStringToString(lastName)
+	student.UpdatedAt = pkg.NullStringToString(updatedAt)
+
 
 	if err != nil {
 		return student, err

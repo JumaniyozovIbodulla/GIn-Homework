@@ -95,7 +95,7 @@ func TestGetAllStudent(t *testing.T) {
 			testResponse, err := studentRepo.GetAll(context.Background(), models.GetAllStudentsRequest{})
 			if assert.NoError(t, err) {
 				testCount := testResponse.Count
-				assert.Equal(t, count + 1, testCount)
+				assert.Equal(t, count+1, testCount)
 			} else {
 				return
 			}
