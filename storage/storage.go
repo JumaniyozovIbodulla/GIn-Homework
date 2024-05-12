@@ -14,7 +14,7 @@ type IStorage interface {
 }
 
 type StudentStorage interface {
-	Create(ctx context.Context, student models.Student) (string, error)
+	Create(ctx context.Context, student models.AddStudent) (string, error)
 	Update(ctx context.Context, student models.Student) (string, error)
 	UpdateStatus(ctx context.Context, student models.Student) (string, error)
 	Delete(ctx context.Context, id string) error
@@ -23,7 +23,7 @@ type StudentStorage interface {
 }
 
 type TeacherStorage interface {
-	Create(ctx context.Context, teacher models.Teacher) (string, error)
+	Create(ctx context.Context, teacher models.AddTeacher) (string, error)
 	Update(ctx context.Context, teacher models.Teacher) (string, error)
 	Delete(ctx context.Context, id string) error
 	GetTeacher(ctx context.Context, id string) (models.Teacher, error)
@@ -31,7 +31,7 @@ type TeacherStorage interface {
 }
 
 type SubjectStorage interface {
-	Create(ctx context.Context, subject models.Subjects) (string, error)
+	Create(ctx context.Context, subject models.AddSubject) (string, error)
 	Update(ctx context.Context, subject models.Subjects) (string, error)
 	Delete(ctx context.Context, id string) error
 	GetSubject(ctx context.Context, id string) (models.Subjects, error)

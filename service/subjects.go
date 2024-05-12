@@ -15,7 +15,7 @@ func NewSubjectService(storage storage.IStorage) subjectsService {
 	return subjectsService{storage: storage}
 }
 
-func (s subjectsService) Create(ctx context.Context, subject models.Subjects) (string, error) {
+func (s subjectsService) Create(ctx context.Context, subject models.AddSubject) (string, error) {
 	// business logic
 	id, err := s.storage.SubjectsStorage().Create(ctx, subject)
 	if err != nil {

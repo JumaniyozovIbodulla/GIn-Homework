@@ -3,7 +3,6 @@ package postgres
 import (
 	"backend_course/lms/api/models"
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/go-faker/faker/v4"
@@ -13,7 +12,7 @@ import (
 func TestCreateStudent(t *testing.T) {
 	studentRepo := NewStudent(db)
 
-	reqStudent := models.Student{
+	reqStudent := models.AddStudent{
 		FirstName: faker.Name(),
 		Age:       10,
 		LastName:  faker.Word(),
@@ -29,7 +28,6 @@ func TestCreateStudent(t *testing.T) {
 		} else {
 			return
 		}
-		fmt.Println("Created student", createdStudent)
 	}
 }
 
@@ -62,7 +60,7 @@ func TestUpdateStudent(t *testing.T) {
 func TestDeleteStudent(t *testing.T) {
 	studentRepo := NewStudent(db)
 
-	reqStudent := models.Student{
+	reqStudent := models.AddStudent{
 		FirstName: faker.Name(),
 		Age:       10,
 		LastName:  faker.Word(),
@@ -79,7 +77,7 @@ func TestDeleteStudent(t *testing.T) {
 
 func TestGetAllStudent(t *testing.T) {
 	studentRepo := NewStudent(db)
-	reqStudent := models.Student{
+	reqStudent := models.AddStudent{
 		FirstName: faker.Name(),
 		Age:       10,
 		LastName:  faker.Word(),

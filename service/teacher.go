@@ -15,7 +15,7 @@ func NewTeacherService(storage storage.IStorage) teacherService {
 	return teacherService{storage: storage}
 }
 
-func (s teacherService) Create(ctx context.Context, teacher models.Teacher) (string, error) {
+func (s teacherService) Create(ctx context.Context, teacher models.AddTeacher) (string, error) {
 	// business logic
 	id, err := s.storage.TeacherStorage().Create(ctx, teacher)
 	if err != nil {

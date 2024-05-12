@@ -1,0 +1,5 @@
+ALTER TABLE "students"
+ADD COLUMN password VARCHAR(100);
+
+ALTER TABLE "teachers"
+ADD COLUMN password VARCHAR(100);

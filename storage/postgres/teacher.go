@@ -5,7 +5,6 @@ import (
 	"backend_course/lms/pkg"
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -21,15 +20,15 @@ func NewTeacher(db *pgxpool.Pool) teacherRepo {
 	}
 }
 
-func (s *teacherRepo) Create(ctx context.Context, teacher models.Teacher) (string, error) {
+func (s *teacherRepo) Create(ctx context.Context, teacher models.AddTeacher) (string, error) {
 
 	id := uuid.New()
 
 	query := `
 	INSERT INTO
-		teachers (id, first_name, last_name, subject_id, start_working, phone, mail) VALUES ($1, $2, $3, $4, $5, $6, $7);`
+		teachers (id, first_name, last_name, subject_id, start_working, phone, mail, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`
 
-	_, err := s.db.Exec(ctx, query, id, teacher.FirstName, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email)
+	_, err := s.db.Exec(ctx, query, id, teacher.FirstName, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email, teacher.Password)
 	if err != nil {
 		return "", err
 	}
@@ -46,7 +45,7 @@ func (s *teacherRepo) Update(ctx context.Context, teacher models.Teacher) (strin
 	WHERE 
 		id = $1 `
 
-	_, err := s.db.Exec(ctx, query, teacher.Id, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email)
+	_, err := s.db.Exec(ctx, query, teacher.Id, teacher.FirstName, teacher.LastName, teacher.SubjectId, teacher.StartWorking, teacher.Phone, teacher.Email)
 	if err != nil {
 		return "", err
 	}
@@ -78,30 +77,54 @@ func (s *teacherRepo) GetAll(ctx context.Context, req models.GetAllTeachersReque
 		filter = ` AND first_name ILIKE '%` + req.Search + `%' `
 	}
 
-	query := `SELECT id,
-					first_name,
-					last_name
-				FROM teachers
-				WHERE TRUE ` + filter + `
-				OFFSET $1 LIMIT $2
-					`
+	query := `
+	SELECT 
+		id,
+		first_name,
+		last_name,
+		subject_id,
+		TO_CHAR(start_working,'YYYY-MM-DD HH:MM:SS'),
+		phone,
+		mail,
+		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS')
+	FROM 
+		teachers
+	WHERE TRUE ` + filter + `
+	OFFSET
+		$1 
+	LIMIT 
+		$2;`
+
 	rows, err := s.db.Query(ctx, query, offest, req.Limit)
 	if err != nil {
 		return resp, err
 	}
 	for rows.Next() {
 		var (
-			teacher  models.Teacher
-			lastName sql.NullString
+			teacher   models.Teacher
+			firstName, lastName, subjectId, startWorking, phone, mail, createdAt, updatedAt sql.NullString
 		)
+
 		if err := rows.Scan(
 			&teacher.Id,
-			&teacher.FirstName,
-			&lastName); err != nil {
+			&firstName,
+			&lastName,
+			&subjectId,
+			&startWorking,
+			&phone,
+			&mail,
+			&createdAt,
+			&updatedAt,); err != nil {
 			return resp, err
 		}
-
+		teacher.FirstName = pkg.NullStringToString(firstName)
 		teacher.LastName = pkg.NullStringToString(lastName)
+		teacher.SubjectId = pkg.NullStringToString(subjectId)
+		teacher.StartWorking = pkg.NullStringToString(startWorking)
+		teacher.Phone = pkg.NullStringToString(phone)
+		teacher.Email = pkg.NullStringToString(mail)
+
 		resp.Teachers = append(resp.Teachers, teacher)
 	}
 
@@ -121,7 +144,7 @@ func (s *teacherRepo) GetTeacher(ctx context.Context, id string) (models.Teacher
 		first_name,
 		last_name,
 		subject_id,
-		start_working,
+		TO_CHAR(start_working,'YYYY-MM-DD HH:MM:SS'),
 		phone,
 		mail,
 		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
@@ -133,11 +156,20 @@ func (s *teacherRepo) GetTeacher(ctx context.Context, id string) (models.Teacher
 `
 	row := s.db.QueryRow(ctx, query, id)
 
-	var teacher models.Teacher
+	var (
+		teacher models.Teacher
+		firstName, lastName, subjectId, startWorking, phone, mail, createdAt, updatedAt sql.NullString
+)
 
-	err := row.Scan(&teacher.Id, &teacher.FirstName, &teacher.LastName, &teacher.SubjectId, &teacher.StartWorking, &teacher.Phone, &teacher.Email, &teacher.CreatedAt, &teacher.UpdatedAt)
-	fmt.Println(teacher.Id, teacher.FirstName)
-	fmt.Println(err)
+	err := row.Scan(&teacher.Id, &firstName, &lastName, &subjectId, &startWorking, &phone, &mail, &createdAt, &updatedAt)
+
+	teacher.FirstName = pkg.NullStringToString(firstName)
+	teacher.LastName = pkg.NullStringToString(lastName)
+	teacher.SubjectId = pkg.NullStringToString(subjectId)
+	teacher.StartWorking = pkg.NullStringToString(startWorking)
+	teacher.Phone = pkg.NullStringToString(phone)
+	teacher.Email = pkg.NullStringToString(mail)
+
 	if err != nil {
 		return teacher, err
 	}

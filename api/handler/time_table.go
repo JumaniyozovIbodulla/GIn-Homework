@@ -23,17 +23,17 @@ import (
 func (h Handler) CreateTime(c *gin.Context) {
 	time := models.Time{}
 	if err := c.ShouldBindJSON(&time); err != nil {
-		handleResponse(c, "error while reading request body", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while reading request body", http.StatusBadRequest, err.Error())
 		return
 	}
 
-	id, err := h.Store.TimeStorage().Create(c.Request.Context(), time)
+	id, err := h.Service.Time().Create(c.Request.Context(), time)
 	if err != nil {
-		handleResponse(c, "error while creating time table", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while creating time table", http.StatusBadRequest, err.Error())
 		return
 	}
 
-	handleResponse(c, "Created successfully", http.StatusOK, id)
+	handleResponse(c, h.Log, "Created successfully", http.StatusOK, id)
 }
 
 // @Router		/time/{id} [PUT]
@@ -53,24 +53,23 @@ func (h Handler) UpdateTime(c *gin.Context) {
 
 	id := c.Param("id")
 	if err := uuid.Validate(id); err != nil {
-		handleResponse(c, "error while validating studentId", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while validating studentId", http.StatusBadRequest, err.Error())
 		return
 	}
 	time.Id = id
 
 	if err := c.ShouldBindJSON(&time); err != nil {
-		handleResponse(c, "error while reading request body", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while reading request body", http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.Store.TimeStorage().Update(c.Request.Context(), time)
+	id, err := h.Service.Time().Update(c.Request.Context(), time)
 	if err != nil {
-		handleResponse(c, "error while updating time table", http.StatusInternalServerError, err.Error())
+		handleResponse(c, h.Log, "error while updating time table", http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	handleResponse(c, "Updated successfully", http.StatusOK, id)
+	handleResponse(c, h.Log, "Updated successfully", http.StatusOK, id)
 }
-
 
 // @Router		/time/{id} [DELETE]
 // @Summary		delete a time table
@@ -86,19 +85,19 @@ func (h Handler) UpdateTime(c *gin.Context) {
 func (h Handler) DeleteTime(c *gin.Context) {
 	id := c.Param("id")
 	if err := uuid.Validate(id); err != nil {
-		handleResponse(c, "error while validating timeId", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while validating timeId", http.StatusBadRequest, err.Error())
 		return
 	}
-	if err := h.Store.TimeStorage().Delete(c.Request.Context(), id); err != nil {
-		handleResponse(c, "error while deleting student", http.StatusInternalServerError, err.Error())
+	if err := h.Service.Time().Delete(c.Request.Context(), id); err != nil {
+		handleResponse(c, h.Log, "error while deleting student", http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	handleResponse(c, "Deleted successfully", http.StatusOK, id)
+	handleResponse(c, h.Log, "Deleted successfully", http.StatusOK, id)
 }
 
 // @Router		/time/{id} [GET]
-// @Summary		Get a time table
+// @Summary		get a time table
 // @Description	This api get a time_table
 // @Tags		time_table
 // @Accept		json
@@ -112,21 +111,21 @@ func (h Handler) GetTime(c *gin.Context) {
 
 	id := c.Param("id")
 	if err := uuid.Validate(id); err != nil {
-		handleResponse(c, "error while validating timeId", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while validating timeId", http.StatusBadRequest, err.Error())
 		return
 	}
 
-	std, err := h.Store.TimeStorage().GetTime(c.Request.Context(), id)
+	std, err := h.Service.Time().GetTimeTable(c.Request.Context(), id)
 	if err != nil {
-		handleResponse(c, "error while getting time table", http.StatusInternalServerError, err.Error())
+		handleResponse(c, h.Log, "error while getting time table", http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	handleResponse(c, "Got successfully", http.StatusOK, std)
+	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }
 
 // @Router		/time-tables [GET]
-// @Summary		Get  time tables
+// @Summary		get  time tables
 // @Description	This api get all time tables
 // @Tags		time_table
 // @Accept		json
@@ -141,23 +140,23 @@ func (h Handler) GetAllTimeTables(c *gin.Context) {
 
 	page, err := ParsePageQueryParam(c)
 	if err != nil {
-		handleResponse(c, "error while parsing page", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while parsing page", http.StatusBadRequest, err.Error())
 		return
 	}
 	limit, err := ParseLimitQueryParam(c)
 	if err != nil {
-		handleResponse(c, "error while parsing limit", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while parsing limit", http.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp, err := h.Store.TimeStorage().GetAll(c.Request.Context(), models.GetAllTimeRequest{
+	resp, err := h.Service.Time().GetAll(c.Request.Context(), models.GetAllTimeRequest{
 		Search: search,
 		Page:   page,
 		Limit:  limit,
 	})
 	if err != nil {
-		handleResponse(c, "error while getting all time tables", http.StatusInternalServerError, err.Error())
+		handleResponse(c, h.Log, "error while getting all time tables", http.StatusInternalServerError, err.Error())
 		return
 	}
-	handleResponse(c, "request successful", http.StatusOK, resp)
+	handleResponse(c, h.Log, "request successful", http.StatusOK, resp)
 }

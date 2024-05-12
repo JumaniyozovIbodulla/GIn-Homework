@@ -8,6 +8,11 @@ type Subjects struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
+type AddSubject struct {
+	Name      string `json:"name"`
+	Type      string `json:"type"`
+}
+
 
 type GetAllSubjectsRequest struct {
 	Search string `json:"search"`

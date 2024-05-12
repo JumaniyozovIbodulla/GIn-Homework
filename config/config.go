@@ -14,6 +14,7 @@ type Config struct {
 	PostgresPassword string
 	PostgresUser     string
 	PostgresDatabase string
+	ServiceName string
 }
 
 func Load() Config {
@@ -28,6 +29,7 @@ func Load() Config {
 	cfg.PostgresDatabase = cast.ToString(getOrReturnDefault("POSTGRES_DATABASE", "gin1"))
 	cfg.PostgresUser = cast.ToString(getOrReturnDefault("POSTGRES_USER", "golang"))
 	cfg.PostgresPassword = cast.ToString(getOrReturnDefault("POSTGRES_PASSWORD", "golang"))
+	cfg.ServiceName = "LMS"
 
 	return cfg
 }

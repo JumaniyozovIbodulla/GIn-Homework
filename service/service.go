@@ -5,6 +5,8 @@ import "backend_course/lms/storage"
 type IServiceManager interface {
 	Student() studentService
 	Teacher() teacherService
+	Subjects() subjectsService
+	Time() timeService
 }
 
 type Service struct {

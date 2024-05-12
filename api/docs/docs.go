@@ -79,7 +79,7 @@ const docTemplate = `{
                 "tags": [
                     "student"
                 ],
-                "summary": "Get a student",
+                "summary": "get a student",
                 "parameters": [
                     {
                         "type": "string",
@@ -135,7 +135,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Student"
+                            "$ref": "#/definitions/models.AddStudent"
                         }
                     }
                 ],
@@ -277,7 +277,7 @@ const docTemplate = `{
                 "tags": [
                     "student"
                 ],
-                "summary": "Get  students",
+                "summary": "get  students",
                 "parameters": [
                     {
                         "type": "string",
@@ -335,7 +335,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Subjects"
+                            "$ref": "#/definitions/models.AddSubject"
                         }
                     }
                 ],
@@ -379,7 +379,7 @@ const docTemplate = `{
                 "tags": [
                     "subject"
                 ],
-                "summary": "Get a subject",
+                "summary": "get a subject",
                 "parameters": [
                     {
                         "type": "string",
@@ -527,7 +527,7 @@ const docTemplate = `{
                 "tags": [
                     "subject"
                 ],
-                "summary": "Get  subjects",
+                "summary": "get  subjects",
                 "parameters": [
                     {
                         "type": "string",
@@ -585,7 +585,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Teacher"
+                            "$ref": "#/definitions/models.AddTeacher"
                         }
                     }
                 ],
@@ -629,7 +629,7 @@ const docTemplate = `{
                 "tags": [
                     "teacher"
                 ],
-                "summary": "Get a teacher",
+                "summary": "get a teacher",
                 "parameters": [
                     {
                         "type": "string",
@@ -685,7 +685,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Teacher"
+                            "$ref": "#/definitions/models.AddTeacher"
                         }
                     }
                 ],
@@ -777,16 +777,7 @@ const docTemplate = `{
                 "tags": [
                     "teacher"
                 ],
-                "summary": "Get  all teachers",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "get  all teachers",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -879,7 +870,7 @@ const docTemplate = `{
                 "tags": [
                     "time_table"
                 ],
-                "summary": "Get  time tables",
+                "summary": "get  time tables",
                 "parameters": [
                     {
                         "type": "string",
@@ -929,7 +920,7 @@ const docTemplate = `{
                 "tags": [
                     "time_table"
                 ],
-                "summary": "Get a time table",
+                "summary": "get a time table",
                 "parameters": [
                     {
                         "type": "string",
@@ -1088,7 +1079,47 @@ const docTemplate = `{
                 "mail": {
                     "type": "string"
                 },
+                "password": {
+                    "type": "string"
+                },
                 "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AddSubject": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AddTeacher": {
+            "type": "object",
+            "properties": {
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "mail": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "start_working": {
+                    "type": "string"
+                },
+                "subject_id": {
                     "type": "string"
                 }
             }
@@ -1153,38 +1184,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Teacher": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "mail": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "start_working": {
-                    "type": "string"
-                },
-                "subject_id": {
                     "type": "string"
                 },
                 "updated_at": {

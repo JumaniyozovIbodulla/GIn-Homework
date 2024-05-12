@@ -15,7 +15,7 @@ func NewStudentService(storage storage.IStorage) studentService {
 	return studentService{storage: storage}
 }
 
-func (s studentService) Create(ctx context.Context, student models.Student) (string, error) {
+func (s studentService) Create(ctx context.Context, student models.AddStudent) (string, error) {
 	// business logic
 	id, err := s.storage.StudentStorage().Create(ctx, student)
 	if err != nil {

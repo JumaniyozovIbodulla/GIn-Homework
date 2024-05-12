@@ -21,6 +21,7 @@ type AddStudent struct {
 	Phone      string `json:"phone"`
 	Email      string `json:"mail"`
 	IsActive   bool   `json:"is_active"`
+	Password   string `json:"password,omitempty"`
 }
 
 type GetStudent struct {

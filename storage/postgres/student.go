@@ -21,15 +21,15 @@ func NewStudent(db *pgxpool.Pool) studentRepo {
 	}
 }
 
-func (s *studentRepo) Create(ctx context.Context, student models.Student) (string, error) {
+func (s *studentRepo) Create(ctx context.Context, student models.AddStudent) (string, error) {
 
 	id := uuid.New()
 
 	query := `
 	INSERT INTO
-		students (id, first_name, last_name, age, external_id, phone, mail) VALUES ($1, $2, $3, $4, $5, $6, $7);`
+		students (id, first_name, last_name, age, external_id, phone, mail, password) VALUES ($1, $2, $3, $4, $5, $6, $7, &8);`
 
-	_, err := s.db.Exec(ctx, query, id, student.FirstName, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email)
+	_, err := s.db.Exec(ctx, query, id, student.FirstName, student.LastName, student.Age, student.ExternalId, student.Phone, student.Email, student.Password)
 	if err != nil {
 		return "", err
 	}
@@ -101,30 +101,55 @@ func (s *studentRepo) GetAll(ctx context.Context, req models.GetAllStudentsReque
 		filter = ` AND first_name ILIKE '%` + req.Search + `%' `
 	}
 
-	query := `SELECT id,
-					first_name,
-					last_name
-				FROM students
-				WHERE TRUE ` + filter + `
-				OFFSET $1 LIMIT $2
-					`
+	query := `
+	SELECT
+		id,
+		first_name,
+		last_name,
+		age,
+		external_id,
+		phone,
+		mail,
+		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS'),
+		is_active
+	FROM
+		students
+	WHERE TRUE ` + filter + `
+	OFFSET
+		$1
+	LIMIT
+		$2;`
+
 	rows, err := s.db.Query(ctx, query, offest, req.Limit)
 	if err != nil {
 		return resp, err
 	}
 	for rows.Next() {
 		var (
-			student  models.GetStudent
-			lastName sql.NullString
+			student     models.GetStudent
+			firstName, lastName, externalId, phone, mail, updatedAt sql.NullString
 		)
 		if err := rows.Scan(
 			&student.Id,
-			&student.FirstName,
-			&lastName); err != nil {
+			&firstName,
+			&lastName,
+			&student.Age,
+			&externalId,
+			&phone,
+			&mail,
+			&student.CreatedAt,
+			&updatedAt,
+			&student.IsActive); err != nil {
 			return resp, err
 		}
-
+		student.FirstName = pkg.NullStringToString(firstName)
 		student.LastName = pkg.NullStringToString(lastName)
+		student.ExternalId = pkg.NullStringToString(externalId)
+		student.Phone = pkg.NullStringToString(phone)
+		student.Email = pkg.NullStringToString(mail)
+		student.UpdatedAt = pkg.NullStringToString(updatedAt)
+
 		resp.Students = append(resp.Students, student)
 	}
 
@@ -148,24 +173,28 @@ func (s *studentRepo) GetStudent(ctx context.Context, id string) (models.GetStud
 		phone,
 		mail,
 		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
-		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS')
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS'),
+		is_active
 	FROM
 		students
 	WHERE
-		id = $1;
-`
+		id = $1;`
+		
 	row := s.db.QueryRow(ctx, query, id)
 
 	var (
-		student models.GetStudent
-		lastName, updatedAt sql.NullString
+		student             models.GetStudent
+		firstName, lastName, externalId, phone, mail, updatedAt sql.NullString
 	)
 
-	err := row.Scan(&student.Id, &student.FirstName, &lastName, &student.Age, &student.ExternalId, &student.Phone, &student.Email, &student.CreatedAt, &updatedAt)
-
+	err := row.Scan(&student.Id, &firstName, &lastName, &student.Age, &externalId, &phone, &mail, &student.CreatedAt, &updatedAt, &student.IsActive)
+	
+	student.FirstName = pkg.NullStringToString(firstName)
 	student.LastName = pkg.NullStringToString(lastName)
+	student.ExternalId = pkg.NullStringToString(externalId)
+	student.Phone = pkg.NullStringToString(phone)
+	student.Email = pkg.NullStringToString(mail)
 	student.UpdatedAt = pkg.NullStringToString(updatedAt)
-
 
 	if err != nil {
 		return student, err
