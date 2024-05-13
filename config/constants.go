@@ -10,6 +10,7 @@ const (
 	SmtpPort            = "587"
 	SmtpUsername        = "jumaniyozovibodulla07@gmail.com"
 	SmtpPassword        = "pntm dene uuvh qavx"
+	SignedKey           = "AtRdbumqoPjbcNjNhBgtmdAnRJyPQVXjwMPNYNbv"
 )
 
 

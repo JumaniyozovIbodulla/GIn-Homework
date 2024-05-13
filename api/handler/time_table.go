@@ -15,7 +15,7 @@ import (
 // @Tags		time_table
 // @Accept		json
 // @Produce		json
-// @Param		time_table body models.Time true "time table"
+// @Param		time_table body models.AddTime true "time_table"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -42,7 +42,8 @@ func (h Handler) CreateTime(c *gin.Context) {
 // @Tags		time_table
 // @Accept		json
 // @Produce		json
-// @Param		time_table body models.Time true "time table"
+// @Param		time_table body models.AddTime true "time_table"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -130,7 +131,6 @@ func (h Handler) GetTime(c *gin.Context) {
 // @Tags		time_table
 // @Accept		json
 // @Produce		json
-// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response

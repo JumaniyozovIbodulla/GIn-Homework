@@ -43,7 +43,8 @@ func (h Handler) CreateSubject(c *gin.Context) {
 // @Tags		subject
 // @Accept		json
 // @Produce		json
-// @Param		subject body models.Subjects true "subject"
+// @Param		subject body models.UpdateSubjects true "subject"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -54,7 +55,7 @@ func (h Handler) UpdateSubject(c *gin.Context) {
 
 	id := c.Param("id")
 	if err := uuid.Validate(id); err != nil {
-		handleResponse(c, h.Log, "error while validating studentId", http.StatusBadRequest, err.Error())
+		handleResponse(c, h.Log, "error while validating subjectId", http.StatusBadRequest, err.Error())
 		return
 	}
 	subject.Id = id
@@ -132,7 +133,6 @@ func (h Handler) GetSubject(c *gin.Context) {
 // @Tags		subject
 // @Accept		json
 // @Produce		json
-// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response

@@ -13,6 +13,12 @@ type AddSubject struct {
 	Type      string `json:"type"`
 }
 
+type UpdateSubjects struct {
+	Name      string `json:"name"`
+	Type      string `json:"type"`
+	CreatedAt string `json:"created_at"`
+}
+
 
 type GetAllSubjectsRequest struct {
 	Search string `json:"search"`
@@ -21,6 +27,6 @@ type GetAllSubjectsRequest struct {
 }
 
 type GetAllSubjectsResponse struct {
-	Subjects []Subjects `json:"students"`
+	Subjects []Subjects `json:"subjects"`
 	Count    int64        `json:"count"`
 }

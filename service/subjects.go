@@ -4,7 +4,6 @@ import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/storage"
 	"context"
-	"log"
 )
 
 type subjectsService struct {
@@ -19,7 +18,6 @@ func (s subjectsService) Create(ctx context.Context, subject models.AddSubject) 
 	// business logic
 	id, err := s.storage.SubjectsStorage().Create(ctx, subject)
 	if err != nil {
-		log.Fatal("error while creating a subject, err: ", err)
 		return "", err
 	}
 	// business logic
@@ -30,19 +28,16 @@ func (s subjectsService) Update(ctx context.Context, subject models.Subjects) (s
 	// business logic
 	id, err := s.storage.SubjectsStorage().Update(ctx, subject)
 	if err != nil {
-		log.Fatal("error while updating a subject, err: ", err)
 		return "", err
 	}
 	// business logic
 	return id, nil
 }
 
-
 func (s subjectsService) Delete(ctx context.Context, id string) error {
 	err := s.storage.SubjectsStorage().Delete(ctx, id)
 
 	if err != nil {
-		log.Fatal("error while deleting a subject: ", err)
 		return err
 	}
 
@@ -52,7 +47,6 @@ func (s subjectsService) Delete(ctx context.Context, id string) error {
 func (s subjectsService) GetAll(ctx context.Context, req models.GetAllSubjectsRequest) (models.GetAllSubjectsResponse, error) {
 	res, err := s.storage.SubjectsStorage().GetAll(ctx, req)
 	if err != nil {
-		log.Fatal("error while getting all subjects: ", err)
 		return res, err
 	}
 
@@ -63,7 +57,6 @@ func (s subjectsService) GetSubject(ctx context.Context, id string) (models.Subj
 	subject, err := s.storage.SubjectsStorage().GetSubject(ctx, id)
 
 	if err != nil {
-		log.Fatal("error getting a subject: ", err)
 		return subject, err
 	}
 

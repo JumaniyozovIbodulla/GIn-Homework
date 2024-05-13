@@ -20,6 +20,7 @@ type StudentStorage interface {
 	Delete(ctx context.Context, id string) error
 	GetStudent(ctx context.Context, id string) (models.GetStudent, error)
 	GetAll(ctx context.Context, req models.GetAllStudentsRequest) (models.GetAllStudentsResponse, error)
+	CheckStudentLesson(ctx context.Context, id string) (models.CheckLessonStudent, error)
 }
 
 type TeacherStorage interface {

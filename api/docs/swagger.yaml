@@ -42,6 +42,21 @@ definitions:
       subject_id:
         type: string
     type: object
+  models.AddTime:
+    properties:
+      from_date:
+        type: string
+      room_name:
+        type: string
+      student_id:
+        type: string
+      subject_id:
+        type: string
+      teacher_id:
+        type: string
+      to_date:
+        type: string
+    type: object
   models.Response:
     properties:
       data: {}
@@ -50,40 +65,13 @@ definitions:
       statusCode:
         type: integer
     type: object
-  models.Student:
-    properties:
-      age:
-        type: integer
-      created_at:
-        type: string
-      external_id:
-        type: string
-      first_name:
-        type: string
-      id:
-        type: string
-      is_active:
-        type: boolean
-      last_name:
-        type: string
-      mail:
-        type: string
-      phone:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  models.Subjects:
+  models.UpdateSubjects:
     properties:
       created_at:
-        type: string
-      id:
         type: string
       name:
         type: string
       type:
-        type: string
-      updated_at:
         type: string
     type: object
 info:
@@ -92,6 +80,39 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /check-student/{id}:
+    get:
+      consumes:
+      - application/json
+      description: This api get a check student's lesson
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: get a student's lesson
+      tags:
+      - student
   /student:
     post:
       consumes:
@@ -201,7 +222,7 @@ paths:
         name: student
         required: true
         schema:
-          $ref: '#/definitions/models.Student'
+          $ref: '#/definitions/models.AddStudent'
       produces:
       - application/json
       responses:
@@ -235,6 +256,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.AddStudent'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -262,12 +288,6 @@ paths:
       consumes:
       - application/json
       description: This api get all students
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -399,7 +419,12 @@ paths:
         name: subject
         required: true
         schema:
-          $ref: '#/definitions/models.Subjects'
+          $ref: '#/definitions/models.UpdateSubjects'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -427,12 +452,6 @@ paths:
       consumes:
       - application/json
       description: This api get all subjects
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -565,6 +584,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.AddTeacher'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -620,12 +644,12 @@ paths:
       - application/json
       description: This api create a time table and returns its id
       parameters:
-      - description: time table
+      - description: time_table
         in: body
         name: time_table
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/models.AddTime'
       produces:
       - application/json
       responses:
@@ -653,12 +677,6 @@ paths:
       consumes:
       - application/json
       description: This api get all time tables
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -751,12 +769,17 @@ paths:
       - application/json
       description: This api update a time table and returns its id
       parameters:
-      - description: time table
+      - description: time_table
         in: body
         name: time_table
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/models.AddTime'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:

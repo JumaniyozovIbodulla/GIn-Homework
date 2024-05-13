@@ -44,6 +44,7 @@ func (h Handler) CreateTeacher(c *gin.Context) {
 // @Accept		json
 // @Produce		json
 // @Param		teacher body models.AddTeacher true "teacher"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response

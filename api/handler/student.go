@@ -51,6 +51,7 @@ func (h Handler) CreateStudent(c *gin.Context) {
 // @Accept		json
 // @Produce		json
 // @Param		student body models.AddStudent true "student"
+// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -85,7 +86,7 @@ func (h Handler) UpdateStudent(c *gin.Context) {
 // @Tags		student
 // @Accept		json
 // @Produce		json
-// @Param		student body models.Student true "student"
+// @Param		student body models.AddStudent true "student"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -173,7 +174,6 @@ func (h Handler) GetStudent(c *gin.Context) {
 // @Tags		student
 // @Accept		json
 // @Produce		json
-// @Param		id path string true "id"
 // @Success		200  {object}  models.Response
 // @Failure		400  {object}  models.Response
 // @Failure		404  {object}  models.Response
@@ -202,4 +202,33 @@ func (h Handler) GetAllStudents(c *gin.Context) {
 		return
 	}
 	handleResponse(c, h.Log, "request successful", http.StatusOK, resp)
+}
+
+
+// @Router		/check-student/{id} [GET]
+// @Summary		get a student's lesson
+// @Description	This api get a check student's lesson
+// @Tags		student
+// @Accept		json
+// @Produce		json
+// @Param		id path string true "id"
+// @Success		200  {object}  models.Response
+// @Failure		400  {object}  models.Response
+// @Failure		404  {object}  models.Response
+// @Failure		500  {object}  models.Response
+func (h Handler) CheckStudentLesson(c *gin.Context) {
+
+	id := c.Param("id")
+	if err := uuid.Validate(id); err != nil {
+		handleResponse(c, h.Log, "error while validating studentId", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	std, err := h.Service.Student().CheckStudentLesson(c.Request.Context(), id)
+	if err != nil {
+		handleResponse(c, h.Log, "error while getting check student", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }

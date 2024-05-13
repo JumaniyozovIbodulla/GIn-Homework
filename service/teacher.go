@@ -4,7 +4,6 @@ import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/storage"
 	"context"
-	"log"
 )
 
 type teacherService struct {
@@ -19,7 +18,6 @@ func (s teacherService) Create(ctx context.Context, teacher models.AddTeacher) (
 	// business logic
 	id, err := s.storage.TeacherStorage().Create(ctx, teacher)
 	if err != nil {
-		log.Fatal("error while creating a teacher, err: ", err)
 		return "", err
 	}
 	// business logic
@@ -30,19 +28,16 @@ func (s teacherService) Update(ctx context.Context, teacher models.Teacher) (str
 	// business logic
 	id, err := s.storage.TeacherStorage().Update(ctx, teacher)
 	if err != nil {
-		log.Fatal("error while updating a teacher, err: ", err)
 		return "", err
 	}
 	// business logic
 	return id, nil
 }
 
-
 func (s teacherService) Delete(ctx context.Context, id string) error {
 	err := s.storage.TeacherStorage().Delete(ctx, id)
 
 	if err != nil {
-		log.Fatal("error while deleting a teacher: ", err)
 		return err
 	}
 
@@ -52,7 +47,6 @@ func (s teacherService) Delete(ctx context.Context, id string) error {
 func (s teacherService) GetAll(ctx context.Context, req models.GetAllTeachersRequest) (models.GetAllTeachersResponse, error) {
 	res, err := s.storage.TeacherStorage().GetAll(ctx, req)
 	if err != nil {
-		log.Fatal("error while getting all teachers: ", err)
 		return res, err
 	}
 
@@ -63,7 +57,6 @@ func (s teacherService) GetTeacher(ctx context.Context, id string) (models.Teach
 	teacher, err := s.storage.TeacherStorage().GetTeacher(ctx, id)
 
 	if err != nil {
-		log.Fatal("error getting a teacher: ", err)
 		return teacher, err
 	}
 

@@ -23,9 +23,9 @@ func (s *timeRepo) Create(ctx context.Context, time models.Time) (string, error)
 
 	query := `
 	INSERT INTO
-		time_table (id, teacher_id, student_id, subject_id, from_date, to_date) VALUES ($1, $2, $3, $4, $5, $6);`
+		time_table (id, teacher_id, student_id, subject_id, from_date, to_date, room_name) VALUES ($1, $2, $3, $4, $5, $6, $7);`
 
-	_, err := s.db.Exec(ctx, query, id, time.TeacherId, time.StudentId, time.SubjectId, time.FromDate, time.ToDate)
+	_, err := s.db.Exec(ctx, query, id, time.TeacherId, time.StudentId, time.SubjectId, time.FromDate, time.ToDate, time.RoomName)
 	if err != nil {
 		return "", err
 	}
@@ -38,7 +38,7 @@ func (s *timeRepo) Update(ctx context.Context, time models.Time) (string, error)
 	UPDATE
 		time_table
 	SET
-		teacher_id = $2, student_id = $3, subject_id = $4, from_date = $5, to_date = $6
+		teacher_id = $2, student_id = $3, subject_id = $4, from_date = $5, to_date = $6, room_name = $7
 	WHERE 
 		id = $1; `
 
@@ -80,9 +80,9 @@ func (s *timeRepo) GetAll(ctx context.Context, req models.GetAllTimeRequest) (mo
 		teacher_id,
 		student_id,
 		subject_id,
-
 		TO_CHAR(from_date,'YYYY-MM-DD HH:MM:SS'),
-		TO_CHAR(to_date,'YYYY-MM-DD HH:MM:SS')
+		TO_CHAR(to_date,'YYYY-MM-DD HH:MM:SS'),
+		room_name
 	FROM 
 		time_table
 	WHERE 
@@ -103,7 +103,8 @@ func (s *timeRepo) GetAll(ctx context.Context, req models.GetAllTimeRequest) (mo
 			&time.StudentId,
 			&time.SubjectId,
 			&time.FromDate,
-			&time.ToDate); err != nil {
+			&time.ToDate,
+			&time.RoomName); err != nil {
 			return resp, err
 		}
 
@@ -125,23 +126,21 @@ func (s *timeRepo) GetTime(ctx context.Context, id string) (models.Time, error) 
 		teacher_id,
 		student_id,
 		subject_id,
-
 		TO_CHAR(from_date,'YYYY-MM-DD HH:MM:SS'),
-		TO_CHAR(to_date,'YYYY-MM-DD HH:MM:SS')
+		TO_CHAR(to_date,'YYYY-MM-DD HH:MM:SS'),
+		room_name
 	FROM
 		time_table
 	WHERE
-		id = $1;
-`
+		id = $1;`
 	row := s.db.QueryRow(ctx, query, id)
 
 	var time models.Time
 
-	err := row.Scan(&time.Id, &time.TeacherId, &time.StudentId, &time.SubjectId, &time.FromDate, &time.ToDate)
+	err := row.Scan(&time.Id, &time.TeacherId, &time.StudentId, &time.SubjectId, &time.FromDate, &time.ToDate, &time.RoomName)
 
 	if err != nil {
 		return time, err
 	}
-
 	return time, nil
 }

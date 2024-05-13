@@ -4,7 +4,6 @@ import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/storage"
 	"context"
-	"log"
 )
 
 type studentService struct {
@@ -19,7 +18,6 @@ func (s studentService) Create(ctx context.Context, student models.AddStudent) (
 	// business logic
 	id, err := s.storage.StudentStorage().Create(ctx, student)
 	if err != nil {
-		log.Fatal("error while creating a student, err: ", err)
 		return "", err
 	}
 	// business logic
@@ -30,7 +28,6 @@ func (s studentService) Update(ctx context.Context, student models.Student) (str
 	// business logic
 	id, err := s.storage.StudentStorage().Update(ctx, student)
 	if err != nil {
-		log.Fatal("error while updating a student, err: ", err)
 		return "", err
 	}
 	// business logic
@@ -41,7 +38,6 @@ func (s studentService) UpdateStatus(ctx context.Context, student models.Student
 	// business logic
 	id, err := s.storage.StudentStorage().UpdateStatus(ctx, student)
 	if err != nil {
-		log.Fatal("error while updating student's status, err: ", err)
 		return "", err
 	}
 	// business logic
@@ -52,7 +48,6 @@ func (s studentService) Delete(ctx context.Context, id string) error {
 	err := s.storage.StudentStorage().Delete(ctx, id)
 
 	if err != nil {
-		log.Fatal("error while deleting a student: ", err)
 		return err
 	}
 
@@ -62,7 +57,6 @@ func (s studentService) Delete(ctx context.Context, id string) error {
 func (s studentService) GetAll(ctx context.Context, req models.GetAllStudentsRequest) (models.GetAllStudentsResponse, error) {
 	res, err := s.storage.StudentStorage().GetAll(ctx, req)
 	if err != nil {
-		log.Fatal("error while getting all students: ", err)
 		return res, err
 	}
 
@@ -73,9 +67,18 @@ func (s studentService) GetStudent(ctx context.Context, id string) (models.GetSt
 	student, err := s.storage.StudentStorage().GetStudent(ctx, id)
 
 	if err != nil {
-		log.Fatal("error getting a student: ", err)
 		return student, err
 	}
 
 	return student, nil
+}
+
+func (s studentService) CheckStudentLesson(ctx context.Context, id string) (models.CheckLessonStudent, error) {
+	checkStudent, err := s.storage.StudentStorage().CheckStudentLesson(ctx, id)
+
+	if err != nil {
+		return checkStudent, err
+	}
+
+	return checkStudent, nil
 }

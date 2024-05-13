@@ -202,3 +202,54 @@ func (s *studentRepo) GetStudent(ctx context.Context, id string) (models.GetStud
 
 	return student, nil
 }
+
+
+func (s *studentRepo) CheckStudentLesson(ctx context.Context, id string) (models.CheckLessonStudent, error) {
+
+	query := `
+	SELECT
+		st.id,
+		st.first_name || ' ' || st.last_name AS student_name,
+		st.age,
+		sb.name AS subject_name,
+		ts.first_name || ' ' || ts.last_name AS teacher_name,
+		tt.room_name,
+		EXTRACT(EPOCH FROM NOW() - tt.to_date) / 60 AS left_time
+	FROM
+		students st
+	INNER JOIN
+		time_table tt
+	ON
+		st.id = tt.student_id
+	INNER JOIN
+		subjects sb
+	ON
+		sb.id = tt.subject_id
+	INNER JOIN
+		teachers ts
+	ON
+		ts.id = tt.teacher_id
+	WHERE 
+		st.id = $1;`
+		
+	row := s.db.QueryRow(ctx, query, id)
+
+	var (
+		checkStudent             models.CheckLessonStudent
+		studentId, studentName, subjectName, teacherName, roomName sql.NullString
+	)
+
+	err := row.Scan(&studentId, &studentName, &checkStudent.StudentAge, &subjectName, &teacherName, &roomName, &checkStudent.TimeLeft)
+	
+	checkStudent.StudentId = pkg.NullStringToString(studentId)
+	checkStudent.StudentName = pkg.NullStringToString(studentName)
+	checkStudent.SubjectName = pkg.NullStringToString(subjectName)
+	checkStudent.TeacherName = pkg.NullStringToString(teacherName)
+	checkStudent.RoomName = pkg.NullStringToString(roomName)
+	
+	if err != nil {
+		return checkStudent, err
+	}
+
+	return checkStudent, nil
+}

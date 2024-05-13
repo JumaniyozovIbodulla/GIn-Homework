@@ -22,6 +22,23 @@ type AddTeacher struct {
 	Password     string `json:"password,omitempty"`
 }
 
+type CheckLessonTeacher struct {
+	Id          string       `json:"id"`
+	SubjectName string       `json:"subject_name"`
+	Students    []MyStudents `json:"students"`
+	RoomName    string       `json:"room_name"`
+	TimeLeft    string       `json:"time_left"`
+}
+
+type MyStudents struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Age       int    `json:"age"`
+	Phone     string `json:"phone"`
+	Email     string `json:"mail"`
+	IsActive  bool   `json:"is_active"`
+}
+
 type GetAllTeachersRequest struct {
 	Search string `json:"search"`
 	Page   uint64 `json:"page"`

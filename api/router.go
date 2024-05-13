@@ -31,6 +31,7 @@ func New(store storage.IStorage, service service.IServiceManager, log logger.ILo
 	r.GET("/students", h.GetAllStudents)
 	r.DELETE("/student/:id", h.DeleteStudent)
 	r.GET("/student/:id", h.GetStudent)
+	r.GET("/check-student/:id", h.CheckStudentLesson)
 
 	r.POST("/teacher", h.CreateTeacher)
 	r.PUT("/teacher/:id", h.UpdateTeacher)

@@ -7,9 +7,17 @@ type Time struct {
 	SubjectId string `json:"subject_id"`
 	FromDate  string `json:"from_date"`
 	ToDate    string `json:"to_date"`
+	RoomName  string `json:"room_name"`
 }
 
-
+type AddTime struct {
+	TeacherId string `json:"teacher_id"`
+	StudentId string `json:"student_id"`
+	SubjectId string `json:"subject_id"`
+	FromDate  string `json:"from_date"`
+	ToDate    string `json:"to_date"`
+	RoomName  string `json:"room_name"`
+}
 
 type GetAllTimeRequest struct {
 	Search string `json:"search"`
@@ -18,6 +26,6 @@ type GetAllTimeRequest struct {
 }
 
 type GetAllTimeResponse struct {
-	Time []Time `json:"students"`
-	Count    int64        `json:"count"`
+	Time  []Time `json:"time_tables"`
+	Count int64  `json:"count"`
 }
