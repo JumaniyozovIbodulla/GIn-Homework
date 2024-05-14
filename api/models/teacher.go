@@ -1,7 +1,5 @@
 package models
 
-import "time"
-
 type Teacher struct {
 	Id           string `json:"id"`
 	FirstName    string `json:"first_name"`
@@ -26,11 +24,11 @@ type AddTeacher struct {
 }
 
 type CheckLessonTeacher struct {
-	TeacherName string        `json:"teacher_name"`
-	SubjectName string        `json:"subject_name"`
-	Students    []MyStudents  `json:"students"`
-	RoomName    string        `json:"room_name"`
-	TimeLeft    time.Duration `json:"time_left"`
+	TeacherName string       `json:"teacher_name"`
+	SubjectName string       `json:"subject_name"`
+	Students    []MyStudents `json:"students"`
+	RoomName    string       `json:"room_name"`
+	TimeLeft    float64       `json:"time_left_in_minutes"`
 }
 
 type MyStudents struct {

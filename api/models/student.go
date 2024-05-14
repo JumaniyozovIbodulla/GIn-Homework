@@ -19,7 +19,7 @@ type CheckLessonStudent struct {
 	SubjectName string  `json:"subject_name"`
 	TeacherName string  `json:"teacher_name"`
 	RoomName    string  `json:"room_name"`
-	TimeLeft    float64 `json:"time_left"`
+	TimeLeft    float64 `json:"time_left_in_minutes"`
 }
 
 type AddStudent struct {

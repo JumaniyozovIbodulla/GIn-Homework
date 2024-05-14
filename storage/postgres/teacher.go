@@ -5,6 +5,7 @@ import (
 	"backend_course/lms/pkg"
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -102,7 +103,7 @@ func (s *teacherRepo) GetAll(ctx context.Context, req models.GetAllTeachersReque
 	}
 	for rows.Next() {
 		var (
-			teacher   models.Teacher
+			teacher                                                                         models.Teacher
 			firstName, lastName, subjectId, startWorking, phone, mail, createdAt, updatedAt sql.NullString
 		)
 
@@ -115,7 +116,7 @@ func (s *teacherRepo) GetAll(ctx context.Context, req models.GetAllTeachersReque
 			&phone,
 			&mail,
 			&createdAt,
-			&updatedAt,); err != nil {
+			&updatedAt); err != nil {
 			return resp, err
 		}
 		teacher.FirstName = pkg.NullStringToString(firstName)
@@ -157,9 +158,9 @@ func (s *teacherRepo) GetTeacher(ctx context.Context, id string) (models.Teacher
 	row := s.db.QueryRow(ctx, query, id)
 
 	var (
-		teacher models.Teacher
+		teacher                                                                         models.Teacher
 		firstName, lastName, subjectId, startWorking, phone, mail, createdAt, updatedAt sql.NullString
-)
+	)
 
 	err := row.Scan(&teacher.Id, &firstName, &lastName, &subjectId, &startWorking, &phone, &mail, &createdAt, &updatedAt)
 
@@ -234,7 +235,7 @@ func (s *teacherRepo) CheckTeacherLesson(ctx context.Context, id string) (models
 		ts.first_name || ' ' || ts.last_name AS teacher_name,
 		sb.name AS subject_name,
 		tt.room_name,
-		AGE(tt.to_date, NOW()) AS time_left
+		tt.to_date
 	FROM
 		teachers ts
 	INNER JOIN
@@ -247,18 +248,19 @@ func (s *teacherRepo) CheckTeacherLesson(ctx context.Context, id string) (models
 		sb.id = tt.subject_id
 	WHERE 
 		ts.id = $1;`
-		
+
 	row := s.db.QueryRow(ctx, query, id)
 
 	var (
-		checkTeacher             models.CheckLessonTeacher
+		checkTeacher                       models.CheckLessonTeacher
 		teacherName, subjectName, roomName sql.NullString
+		savedTime                          time.Time
 	)
 
-	err := row.Scan(&teacherName, &subjectName, &roomName, &checkTeacher.TimeLeft)
-	
+	err := row.Scan(&teacherName, &subjectName, &roomName, &savedTime)
+
 	if err != nil {
-		return checkTeacher, err
+		return models.CheckLessonTeacher{}, err
 	}
 	query = `
 	SELECT
@@ -283,14 +285,14 @@ func (s *teacherRepo) CheckTeacherLesson(ctx context.Context, id string) (models
 	rows, err := s.db.Query(ctx, query, id)
 
 	if err != nil {
-		return checkTeacher, err
+		return models.CheckLessonTeacher{}, err
 	}
 
 	var students []models.MyStudents
 
 	for rows.Next() {
 		var (
-			student models.MyStudents
+			student                                 models.MyStudents
 			studentName, studentPhone, studentEmail sql.NullString
 		)
 
@@ -302,7 +304,7 @@ func (s *teacherRepo) CheckTeacherLesson(ctx context.Context, id string) (models
 			&student.IsActive,
 		)
 		if err != nil {
-			return checkTeacher, err
+			return models.CheckLessonTeacher{}, err
 		}
 
 		student.StudentName = pkg.NullStringToString(studentName)
@@ -314,10 +316,29 @@ func (s *teacherRepo) CheckTeacherLesson(ctx context.Context, id string) (models
 	checkTeacher.TeacherName = pkg.NullStringToString(teacherName)
 	checkTeacher.SubjectName = pkg.NullStringToString(subjectName)
 	checkTeacher.RoomName = pkg.NullStringToString(roomName)
-	
+
+	currentTime := time.Now()
+
+	savedTimePart := savedTime.Format("15:04:05")
+	currentTimePart := currentTime.Format("15:04:05")
+
+	changeFormatSavedTime, err := time.Parse("15:04:05", savedTimePart)
+
+	if err != nil {
+		return models.CheckLessonTeacher{}, err
+	}
+
+	changeFormatCurrentTime, err := time.Parse("15:04:05", currentTimePart)
+
+	if err != nil {
+		return models.CheckLessonTeacher{}, err
+	}
+
+	difference := changeFormatSavedTime.Sub(changeFormatCurrentTime)
+
+	checkTeacher.TimeLeft = difference.Minutes()
+
 	checkTeacher.Students = students
-	
-	
 
 	return checkTeacher, nil
 }

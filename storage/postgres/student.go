@@ -6,6 +6,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -127,7 +128,7 @@ func (s *studentRepo) GetAll(ctx context.Context, req models.GetAllStudentsReque
 	}
 	for rows.Next() {
 		var (
-			student     models.GetStudent
+			student                                                 models.GetStudent
 			firstName, lastName, externalId, phone, mail, updatedAt sql.NullString
 		)
 		if err := rows.Scan(
@@ -179,16 +180,16 @@ func (s *studentRepo) GetStudent(ctx context.Context, id string) (models.GetStud
 		students
 	WHERE
 		id = $1;`
-		
+
 	row := s.db.QueryRow(ctx, query, id)
 
 	var (
-		student             models.GetStudent
+		student                                                 models.GetStudent
 		firstName, lastName, externalId, phone, mail, updatedAt sql.NullString
 	)
 
 	err := row.Scan(&student.Id, &firstName, &lastName, &student.Age, &externalId, &phone, &mail, &student.CreatedAt, &updatedAt, &student.IsActive)
-	
+
 	student.FirstName = pkg.NullStringToString(firstName)
 	student.LastName = pkg.NullStringToString(lastName)
 	student.ExternalId = pkg.NullStringToString(externalId)
@@ -203,7 +204,6 @@ func (s *studentRepo) GetStudent(ctx context.Context, id string) (models.GetStud
 	return student, nil
 }
 
-
 func (s *studentRepo) CheckStudentLesson(ctx context.Context, id string) (models.CheckLessonStudent, error) {
 
 	query := `
@@ -213,7 +213,7 @@ func (s *studentRepo) CheckStudentLesson(ctx context.Context, id string) (models
 		sb.name AS subject_name,
 		ts.first_name || ' ' || ts.last_name AS teacher_name,
 		tt.room_name,
-		EXTRACT(EPOCH FROM NOW() - tt.to_date) / 60 AS left_time
+		tt.to_date
 	FROM
 		students st
 	INNER JOIN
@@ -230,24 +230,47 @@ func (s *studentRepo) CheckStudentLesson(ctx context.Context, id string) (models
 		ts.id = tt.teacher_id
 	WHERE 
 		st.id = $1;`
-		
+
 	row := s.db.QueryRow(ctx, query, id)
 
 	var (
-		checkStudent             models.CheckLessonStudent
+		checkStudent                                    models.CheckLessonStudent
 		studentName, subjectName, teacherName, roomName sql.NullString
+		savedTime time.Time
 	)
 
-	err := row.Scan(&studentName, &checkStudent.StudentAge, &subjectName, &teacherName, &roomName, &checkStudent.TimeLeft)
-	
+	err := row.Scan(&studentName, &checkStudent.StudentAge, &subjectName, &teacherName, &roomName, &savedTime)
+
+	if err != nil {
+		return models.CheckLessonStudent{}, err
+	}
+
 	checkStudent.StudentName = pkg.NullStringToString(studentName)
 	checkStudent.SubjectName = pkg.NullStringToString(subjectName)
 	checkStudent.TeacherName = pkg.NullStringToString(teacherName)
 	checkStudent.RoomName = pkg.NullStringToString(roomName)
-	
+
+
+	currentTime := time.Now()
+
+	savedTimePart := savedTime.Format("15:04:05")
+	currentTimePart := currentTime.Format("15:04:05")
+
+	changeFormatSavedTime, err := time.Parse("15:04:05", savedTimePart)
+
 	if err != nil {
-		return checkStudent, err
+		return models.CheckLessonStudent{}, err
 	}
+
+	changeFormatCurrentTime, err := time.Parse("15:04:05", currentTimePart)
+
+	if err != nil {
+		return models.CheckLessonStudent{}, err
+	}
+
+	difference := changeFormatSavedTime.Sub(changeFormatCurrentTime)
+
+	checkStudent.TimeLeft = difference.Minutes()
 
 	return checkStudent, nil
 }
