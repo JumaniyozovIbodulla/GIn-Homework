@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Security ApiKeyAuth
 // @Router		/subject [POST]
 // @Summary		create a subject
 // @Description	This api create a subject and returns its id
@@ -37,6 +38,7 @@ func (h Handler) CreateSubject(c *gin.Context) {
 	handleResponse(c, h.Log, "Created successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/subject/{id} [PUT]
 // @Summary		update a subject
 // @Description	This api update a subject and returns its id
@@ -74,6 +76,7 @@ func (h Handler) UpdateSubject(c *gin.Context) {
 }
 
 
+// @Security ApiKeyAuth
 // @Router		/subject/{id} [DELETE]
 // @Summary		delete a subject
 // @Description	This api delete a subject
@@ -99,6 +102,7 @@ func (h Handler) DeleteSubject(c *gin.Context) {
 	handleResponse(c, h.Log, "Deleted successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/subject/{id} [GET]
 // @Summary		get a subject
 // @Description	This api get a subject
@@ -127,6 +131,7 @@ func (h Handler) GetSubject(c *gin.Context) {
 	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }
 
+// @Security ApiKeyAuth
 // @Router		/subjects [GET]
 // @Summary		get  subjects
 // @Description	This api get all subjects

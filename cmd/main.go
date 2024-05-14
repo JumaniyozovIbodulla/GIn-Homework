@@ -3,27 +3,26 @@ package main
 import (
 	"backend_course/lms/api"
 	"backend_course/lms/config"
+	"backend_course/lms/pkg/logger"
 	"backend_course/lms/service"
 	"backend_course/lms/storage/postgres"
-	"backend_course/lms/pkg/logger"
 	"context"
-	"fmt"
 )
 
 func main() {
 	cfg := config.Load()
+	log := logger.New(cfg.ServiceName)
+
 	store, err := postgres.New(context.Background(), cfg)
 	if err != nil {
-		fmt.Println("error while connecting db, err: ", err)
+		log.Error("error while connecting db, err: ", logger.Error(err))
 		return
 	}
 	defer store.CloseDB()
 
-	service := service.New(store)
-	log := logger.New(cfg.ServiceName)
+	service := service.New(store, log)
 
 	c := api.New(store, service, log)
 
-	fmt.Println("programm is running on localhost:8008...")
 	c.Run(":8080")
 }

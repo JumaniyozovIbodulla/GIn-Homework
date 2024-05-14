@@ -175,3 +175,57 @@ func (s *teacherRepo) GetTeacher(ctx context.Context, id string) (models.Teacher
 	}
 	return teacher, nil
 }
+
+
+
+func (s *teacherRepo) GetTeacherByLogin(ctx context.Context, login string) (models.Teacher, error) {
+
+	query := `
+	SELECT
+		id,
+		first_name,
+		last_name,
+		subject_id,
+		TO_CHAR(start_working,'YYYY-MM-DD HH:MM:SS'),
+		phone,
+		mail,
+		TO_CHAR(created_at,'YYYY-MM-DD HH:MM:SS'),
+		TO_CHAR(updated_at,'YYYY-MM-DD HH:MM:SS'),
+		password
+	FROM
+		teachers
+	WHERE
+		mail = $1;
+`
+	row := s.db.QueryRow(ctx, query, login)
+
+	var (
+		teacher                                                                         models.Teacher
+		firstName, lastName, subjectId, startWorking, phone, mail, createdAt, updatedAt sql.NullString
+	)
+
+	err := row.Scan(
+		&teacher.Id,
+		&firstName,
+		&lastName,
+		&subjectId,
+		&startWorking,
+		&phone,
+		&mail,
+		&createdAt,
+		&updatedAt,
+		&teacher.Password,
+	)
+
+	teacher.FirstName = pkg.NullStringToString(firstName)
+	teacher.LastName = pkg.NullStringToString(lastName)
+	teacher.SubjectId = pkg.NullStringToString(subjectId)
+	teacher.StartWorking = pkg.NullStringToString(startWorking)
+	teacher.Phone = pkg.NullStringToString(phone)
+	teacher.Email = pkg.NullStringToString(mail)
+
+	if err != nil {
+		return teacher, err
+	}
+	return teacher, nil
+}

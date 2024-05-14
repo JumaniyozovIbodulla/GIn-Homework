@@ -3,6 +3,7 @@ package handler
 import (
 	_ "backend_course/lms/api/docs"
 	"backend_course/lms/api/models"
+	"backend_course/lms/pkg"
 	"backend_course/lms/pkg/check"
 	"net/http"
 	"strconv"
@@ -11,6 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Security ApiKeyAuth
 // @Router		/student [POST]
 // @Summary		create a student
 // @Description	This api create a student and returns its id
@@ -35,6 +37,15 @@ func (h Handler) CreateStudent(c *gin.Context) {
 		return
 	}
 
+	password, err := pkg.HashPassword(student.Password)
+
+	if err != nil {
+		handleResponse(c, h.Log, "error while hashing password", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	student.Password = password
+
 	id, err := h.Service.Student().Create(c.Request.Context(), student)
 	if err != nil {
 		handleResponse(c, h.Log, "error while creating student", http.StatusBadRequest, err.Error())
@@ -44,6 +55,7 @@ func (h Handler) CreateStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Created successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/student/{id} [PUT]
 // @Summary		update a student
 // @Description	This api update a student and returns its id
@@ -80,6 +92,7 @@ func (h Handler) UpdateStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Updated successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/student/{id} [PATCH]
 // @Summary		update a student's status
 // @Description	This api update a student's status and returns its id
@@ -115,6 +128,7 @@ func (h Handler) UpdateStudentStatus(c *gin.Context) {
 	handleResponse(c, h.Log, "Updated successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/student/{id} [DELETE]
 // @Summary		delete a student
 // @Description	This api delete a student
@@ -140,6 +154,7 @@ func (h Handler) DeleteStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Deleted successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/student/{id} [GET]
 // @Summary		get a student
 // @Description	This api get a student
@@ -168,6 +183,7 @@ func (h Handler) GetStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }
 
+// @Security ApiKeyAuth
 // @Router		/students [GET]
 // @Summary		get  students
 // @Description	This api get all students
@@ -205,6 +221,7 @@ func (h Handler) GetAllStudents(c *gin.Context) {
 }
 
 
+// @Security ApiKeyAuth
 // @Router		/check-student/{id} [GET]
 // @Summary		get a student's lesson
 // @Description	This api get a check student's lesson

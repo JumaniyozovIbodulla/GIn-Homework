@@ -10,6 +10,7 @@ type Teacher struct {
 	Email        string `json:"mail"`
 	CreatedAt    string `json:"created_at"`
 	UpdatedAt    string `json:"updated_at"`
+	Password     string `json:"password,omitempty"`
 }
 
 type AddTeacher struct {

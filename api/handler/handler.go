@@ -6,6 +6,9 @@ import (
 	"backend_course/lms/pkg/logger"
 	"backend_course/lms/service"
 	"backend_course/lms/storage"
+	"backend_course/lms/pkg/jwt"
+	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -76,4 +79,27 @@ func ParseLimitQueryParam(c *gin.Context) (uint64, error) {
 		return 10, nil
 	}
 	return limit, nil
+}
+
+func getAuthInfo(c *gin.Context) (models.AuthInfo, error) {
+	accessToken := c.GetHeader("Authorization")
+	if accessToken == "" {
+		return models.AuthInfo{}, errors.New("unauthorized")
+	}
+
+	m, err := jwt.ExtractClaims(accessToken)
+	if err != nil {
+		return models.AuthInfo{}, err
+	}
+
+	fmt.Println("m: ", m)
+	role := m["user_role"].(string)
+	if !(role == config.TEACHER_TYPE || role == config.STUDENT_TYPE) {
+		return models.AuthInfo{}, errors.New("unauthorized")
+	}
+
+	return models.AuthInfo{
+		UserID:   m["user_id"].(string),
+		UserRole: role,
+	}, nil
 }

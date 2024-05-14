@@ -3,12 +3,14 @@ package handler
 import (
 	_ "backend_course/lms/api/docs"
 	"backend_course/lms/api/models"
+	"backend_course/lms/pkg"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
+// @Security ApiKeyAuth
 // @Router		/teacher [POST]
 // @Summary		create a teacher
 // @Description	This api create a teacher and returns its id
@@ -28,6 +30,15 @@ func (h Handler) CreateTeacher(c *gin.Context) {
 		return
 	}
 
+	password, err := pkg.HashPassword(teacher.Password)
+
+	if err != nil {
+		handleResponse(c, h.Log, "error while hashing password", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	teacher.Password = password
+
 	id, err := h.Service.Teacher().Create(c.Request.Context(), teacher)
 	if err != nil {
 		handleResponse(c, h.Log, "error while creating teacher", http.StatusBadRequest, err.Error())
@@ -37,6 +48,8 @@ func (h Handler) CreateTeacher(c *gin.Context) {
 	handleResponse(c, h.Log, "Created successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
+// @Security	ApiKeyAuth
 // @Router		/teacher/{id} [PUT]
 // @Summary		update a teacher
 // @Description	This api update a teacher and returns its id
@@ -53,6 +66,12 @@ func (h Handler) UpdateTeacher(c *gin.Context) {
 
 	teacher := models.Teacher{}
 
+	_, err := getAuthInfo(c)
+	if err != nil {
+		handleResponse(c, h.Log, "unauthorized", http.StatusUnauthorized, err.Error())
+		return
+	}
+
 	id := c.Param("id")
 	if err := uuid.Validate(id); err != nil {
 		handleResponse(c, h.Log, "error while validating teacherId", http.StatusBadRequest, err.Error())
@@ -64,7 +83,7 @@ func (h Handler) UpdateTeacher(c *gin.Context) {
 		handleResponse(c, h.Log, "error while reading request body", http.StatusBadRequest, err.Error())
 		return
 	}
-	id, err := h.Service.Teacher().Update(c.Request.Context(), teacher)
+	id, err = h.Service.Teacher().Update(c.Request.Context(), teacher)
 	if err != nil {
 		handleResponse(c, h.Log, "error while updating teacher", http.StatusInternalServerError, err.Error())
 		return
@@ -73,6 +92,7 @@ func (h Handler) UpdateTeacher(c *gin.Context) {
 	handleResponse(c, h.Log, "Updated successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/teacher/{id} [DELETE]
 // @Summary		delete a teacher
 // @Description	This api delete a teacher
@@ -98,6 +118,7 @@ func (h Handler) DeleteTeacher(c *gin.Context) {
 	handleResponse(c, h.Log, "Deleted successfully", http.StatusOK, id)
 }
 
+// @Security ApiKeyAuth
 // @Router		/teacher/{id} [GET]
 // @Summary		get a teacher
 // @Description	This api get a teacher
@@ -126,6 +147,7 @@ func (h Handler) GetTeacher(c *gin.Context) {
 	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }
 
+// @Security ApiKeyAuth
 // @Router		/teachers [GET]
 // @Summary		get  all teachers
 // @Description	This api get all teachers

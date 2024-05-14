@@ -29,6 +29,7 @@ type TeacherStorage interface {
 	Delete(ctx context.Context, id string) error
 	GetTeacher(ctx context.Context, id string) (models.Teacher, error)
 	GetAll(ctx context.Context, req models.GetAllTeachersRequest) (models.GetAllTeachersResponse, error)
+	GetTeacherByLogin(ctx context.Context, login string) (models.Teacher, error)
 }
 
 type SubjectStorage interface {

@@ -10,9 +10,11 @@ const (
 	SmtpPort            = "587"
 	SmtpUsername        = "jumaniyozovibodulla07@gmail.com"
 	SmtpPassword        = "pntm dene uuvh qavx"
-	SignedKey           = "AtRdbumqoPjbcNjNhBgtmdAnRJyPQVXjwMPNYNbv"
+	TEACHER_TYPE        = "teacher"
+	STUDENT_TYPE        = "student"
 )
 
+var SignedKey = []byte("AtRdbumqoPjbcNjNhBgtmdAnRJyPQVXjwMPNYNbv")
 
 // os qanday ishlaydi?
 // terminal nimaga kerak?
@@ -21,7 +23,7 @@ const (
 // cp copy qiladi.
 // big io notation
 // data structure algorithms
-// map 
+// map
 // gorotune
 // parallesim
 // channel
