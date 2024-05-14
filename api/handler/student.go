@@ -5,6 +5,7 @@ import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/pkg"
 	"backend_course/lms/pkg/check"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -26,14 +27,32 @@ import (
 // @Failure		500  {object}  models.Response
 func (h Handler) CreateStudent(c *gin.Context) {
 	student := models.AddStudent{}
-
+	
 	if err := c.ShouldBindJSON(&student); err != nil {
 		handleResponse(c, h.Log, "error while reading request body", http.StatusBadRequest, err.Error())
 		return
 	}
+
+	fmt.Println(student)
+
+
 	if err := check.ValidateYear(student.Age); err != nil {
 		handleResponse(c, h.Log, "error while validating student age, year: "+strconv.Itoa(student.Age), http.StatusBadRequest, err.Error())
+		return
+	}
 
+	if err := check.ValidatePhone(student.Phone); err != nil {
+		handleResponse(c, h.Log, "error with phone number: ", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := check.ValidatePassword(student.Password); err != nil {
+		handleResponse(c, h.Log, "error with password : ", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if  err := check.ValidateEmail(student.Email); err != nil {
+		handleResponse(c, h.Log, "error with email: ", http.StatusBadRequest, err.Error())
 		return
 	}
 

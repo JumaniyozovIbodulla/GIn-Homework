@@ -4,6 +4,7 @@ import (
 	_ "backend_course/lms/api/docs"
 	"backend_course/lms/api/models"
 	"backend_course/lms/pkg"
+	"backend_course/lms/pkg/check"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,21 @@ func (h Handler) CreateTeacher(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&teacher); err != nil {
 		handleResponse(c, h.Log, "error while reading request body", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := check.ValidatePhone(teacher.Phone); err != nil {
+		handleResponse(c, h.Log, "error with phone number: ", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := check.ValidatePassword(teacher.Password); err != nil {
+		handleResponse(c, h.Log, "error with password: ", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := check.ValidateEmail(teacher.Email); err != nil {
+		handleResponse(c, h.Log, "error with email: ", http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -173,8 +189,8 @@ func (h Handler) GetAllTeachers(c *gin.Context) {
 	}
 
 	resp, err := h.Service.Teacher().GetAll(c.Request.Context(), models.GetAllTeachersRequest{
-		Limit: limit,
-		Page: page,
+		Limit:  limit,
+		Page:   page,
 		Search: search,
 	})
 	if err != nil {
@@ -183,7 +199,6 @@ func (h Handler) GetAllTeachers(c *gin.Context) {
 	}
 	handleResponse(c, h.Log, "request successful", http.StatusOK, resp)
 }
-
 
 // @Security ApiKeyAuth
 // @Router		/check-teacher/{id} [GET]
