@@ -30,6 +30,7 @@ type TeacherStorage interface {
 	GetTeacher(ctx context.Context, id string) (models.Teacher, error)
 	GetAll(ctx context.Context, req models.GetAllTeachersRequest) (models.GetAllTeachersResponse, error)
 	GetTeacherByLogin(ctx context.Context, login string) (models.Teacher, error)
+	CheckTeacherLesson(ctx context.Context, id string) (models.CheckLessonTeacher, error)
 }
 
 type SubjectStorage interface {

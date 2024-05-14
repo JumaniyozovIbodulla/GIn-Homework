@@ -65,3 +65,12 @@ func (s teacherService) GetTeacher(ctx context.Context, id string) (models.Teach
 
 	return teacher, nil
 }
+
+func (s teacherService) CheckTeacherLesson(ctx context.Context, id string) (models.CheckLessonTeacher, error) {
+	checkTeacher, err := s.storage.TeacherStorage().CheckTeacherLesson(ctx, id)
+	if err != nil {
+		s.logger.Error("failed to get a teacher's lesson: ", logger.Error(err))
+		return checkTeacher, err
+	}
+	return checkTeacher, nil
+}

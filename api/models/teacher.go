@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Teacher struct {
 	Id           string `json:"id"`
 	FirstName    string `json:"first_name"`
@@ -24,20 +26,19 @@ type AddTeacher struct {
 }
 
 type CheckLessonTeacher struct {
-	Id          string       `json:"id"`
-	SubjectName string       `json:"subject_name"`
-	Students    []MyStudents `json:"students"`
-	RoomName    string       `json:"room_name"`
-	TimeLeft    string       `json:"time_left"`
+	TeacherName string        `json:"teacher_name"`
+	SubjectName string        `json:"subject_name"`
+	Students    []MyStudents  `json:"students"`
+	RoomName    string        `json:"room_name"`
+	TimeLeft    time.Duration `json:"time_left"`
 }
 
 type MyStudents struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Age       int    `json:"age"`
-	Phone     string `json:"phone"`
-	Email     string `json:"mail"`
-	IsActive  bool   `json:"is_active"`
+	StudentName string `json:"student_name"`
+	Age         int    `json:"age"`
+	Phone       string `json:"phone"`
+	Email       string `json:"mail"`
+	IsActive    bool   `json:"is_active"`
 }
 
 type GetAllTeachersRequest struct {

@@ -208,7 +208,6 @@ func (s *studentRepo) CheckStudentLesson(ctx context.Context, id string) (models
 
 	query := `
 	SELECT
-		st.id,
 		st.first_name || ' ' || st.last_name AS student_name,
 		st.age,
 		sb.name AS subject_name,
@@ -236,12 +235,11 @@ func (s *studentRepo) CheckStudentLesson(ctx context.Context, id string) (models
 
 	var (
 		checkStudent             models.CheckLessonStudent
-		studentId, studentName, subjectName, teacherName, roomName sql.NullString
+		studentName, subjectName, teacherName, roomName sql.NullString
 	)
 
-	err := row.Scan(&studentId, &studentName, &checkStudent.StudentAge, &subjectName, &teacherName, &roomName, &checkStudent.TimeLeft)
+	err := row.Scan(&studentName, &checkStudent.StudentAge, &subjectName, &teacherName, &roomName, &checkStudent.TimeLeft)
 	
-	checkStudent.StudentId = pkg.NullStringToString(studentId)
 	checkStudent.StudentName = pkg.NullStringToString(studentName)
 	checkStudent.SubjectName = pkg.NullStringToString(subjectName)
 	checkStudent.TeacherName = pkg.NullStringToString(teacherName)

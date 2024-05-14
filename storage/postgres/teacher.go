@@ -176,8 +176,6 @@ func (s *teacherRepo) GetTeacher(ctx context.Context, id string) (models.Teacher
 	return teacher, nil
 }
 
-
-
 func (s *teacherRepo) GetTeacherByLogin(ctx context.Context, login string) (models.Teacher, error) {
 
 	query := `
@@ -228,4 +226,98 @@ func (s *teacherRepo) GetTeacherByLogin(ctx context.Context, login string) (mode
 		return teacher, err
 	}
 	return teacher, nil
+}
+
+func (s *teacherRepo) CheckTeacherLesson(ctx context.Context, id string) (models.CheckLessonTeacher, error) {
+	query := `
+	SELECT
+		ts.first_name || ' ' || ts.last_name AS teacher_name,
+		sb.name AS subject_name,
+		tt.room_name,
+		AGE(tt.to_date, NOW()) AS time_left
+	FROM
+		teachers ts
+	INNER JOIN
+		time_table tt
+	ON
+		ts.id = tt.teacher_id
+	INNER JOIN
+		subjects sb
+	ON
+		sb.id = tt.subject_id
+	WHERE 
+		ts.id = $1;`
+		
+	row := s.db.QueryRow(ctx, query, id)
+
+	var (
+		checkTeacher             models.CheckLessonTeacher
+		teacherName, subjectName, roomName sql.NullString
+	)
+
+	err := row.Scan(&teacherName, &subjectName, &roomName, &checkTeacher.TimeLeft)
+	
+	if err != nil {
+		return checkTeacher, err
+	}
+	query = `
+	SELECT
+		st.first_name || ' ' || st.last_name AS student_name,
+		st.age,
+		st.phone,
+		st.mail,
+		st.is_active
+	FROM
+		teachers ts
+	INNER JOIN
+		time_table tt
+	ON
+		ts.id = tt.teacher_id
+	INNER JOIN
+		students st
+	ON
+		st.id = tt.student_id
+	WHERE 
+		ts.id = $1;`
+
+	rows, err := s.db.Query(ctx, query, id)
+
+	if err != nil {
+		return checkTeacher, err
+	}
+
+	var students []models.MyStudents
+
+	for rows.Next() {
+		var (
+			student models.MyStudents
+			studentName, studentPhone, studentEmail sql.NullString
+		)
+
+		err := rows.Scan(
+			&studentName,
+			&student.Age,
+			&studentPhone,
+			&studentEmail,
+			&student.IsActive,
+		)
+		if err != nil {
+			return checkTeacher, err
+		}
+
+		student.StudentName = pkg.NullStringToString(studentName)
+		student.Phone = pkg.NullStringToString(studentPhone)
+		student.Email = pkg.NullStringToString(studentEmail)
+		students = append(students, student)
+	}
+
+	checkTeacher.TeacherName = pkg.NullStringToString(teacherName)
+	checkTeacher.SubjectName = pkg.NullStringToString(subjectName)
+	checkTeacher.RoomName = pkg.NullStringToString(roomName)
+	
+	checkTeacher.Students = students
+	
+	
+
+	return checkTeacher, nil
 }

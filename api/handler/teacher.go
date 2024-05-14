@@ -183,3 +183,33 @@ func (h Handler) GetAllTeachers(c *gin.Context) {
 	}
 	handleResponse(c, h.Log, "request successful", http.StatusOK, resp)
 }
+
+
+// @Security ApiKeyAuth
+// @Router		/check-teacher/{id} [GET]
+// @Summary		get a teacher's lesson
+// @Description	This api get a teacher's lesson
+// @Tags		teacher
+// @Accept		json
+// @Produce		json
+// @Param		id path string true "id"
+// @Success		200  {object}  models.Response
+// @Failure		400  {object}  models.Response
+// @Failure		404  {object}  models.Response
+// @Failure		500  {object}  models.Response
+func (h Handler) GetTeacherLesson(c *gin.Context) {
+
+	id := c.Param("id")
+	if err := uuid.Validate(id); err != nil {
+		handleResponse(c, h.Log, "error while validating teacherId", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	std, err := h.Service.Teacher().CheckTeacherLesson(c.Request.Context(), id)
+	if err != nil {
+		handleResponse(c, h.Log, "error while getting check teacher's lesson", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
+}

@@ -14,7 +14,6 @@ type Student struct {
 }
 
 type CheckLessonStudent struct {
-	StudentId   string  `json:"student_id"`
 	StudentName string  `json:"student_name"`
 	StudentAge  uint16  `json:"student_age"`
 	SubjectName string  `json:"subject_name"`
