@@ -33,7 +33,6 @@ func (s *teacherRepo) Create(ctx context.Context, teacher models.AddTeacher) (st
 	if err != nil {
 		return "", err
 	}
-
 	return id.String(), nil
 }
 
@@ -341,4 +340,27 @@ func (s *teacherRepo) CheckTeacherLesson(ctx context.Context, id string) (models
 	checkTeacher.Students = students
 
 	return checkTeacher, nil
+}
+
+func (s *teacherRepo) IsTeacherExists(ctx context.Context, email string) bool {
+	query := `
+	SELECT
+		mail
+	FROM
+		teachers
+	WHERE
+		mail = $1;`
+	
+	row := s.db.QueryRow(ctx, query, email)
+
+	var (
+		teacher                                                                         models.Teacher
+		mail sql.NullString
+	)
+
+	_ = row.Scan(
+		&mail,)
+
+	teacher.Email = pkg.NullStringToString(mail)
+	return teacher.Email == "" 
 }

@@ -14,3 +14,12 @@ type AuthInfo struct {
 	UserID   string `json:"user_id"`
 	UserRole string `json:"user_role"`
 }
+
+type RegisterRequest struct {
+	Mail string `json:"mail"`
+}
+
+type RegisterConfirmRequest struct {
+	AddTeacher AddTeacher
+	Code int `json:"code"`
+}

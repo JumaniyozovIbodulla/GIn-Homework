@@ -71,6 +71,18 @@ definitions:
       refresh_token:
         type: string
     type: object
+  models.RegisterConfirmRequest:
+    properties:
+      addTeacher:
+        $ref: '#/definitions/models.AddTeacher'
+      code:
+        type: integer
+    type: object
+  models.RegisterRequest:
+    properties:
+      mail:
+        type: string
+    type: object
   models.Response:
     properties:
       data: {}
@@ -725,6 +737,74 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: Teacher login
+      tags:
+      - auth
+  /teacher/register:
+    post:
+      consumes:
+      - application/json
+      description: Teacher register
+      parameters:
+      - description: register
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Teacher register
+      tags:
+      - auth
+  /teacher/register-confirm:
+    post:
+      consumes:
+      - application/json
+      description: Teacher register confirm
+      parameters:
+      - description: register
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterConfirmRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Teacher register confirm
       tags:
       - auth
   /teachers:
