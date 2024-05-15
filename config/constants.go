@@ -15,15 +15,3 @@ const (
 )
 
 var SignedKey = []byte("AtRdbumqoPjbcNjNhBgtmdAnRJyPQVXjwMPNYNbv")
-
-// os qanday ishlaydi?
-// terminal nimaga kerak?
-// qanday commandalar bor terminalda?
-// ps nima qiladi commanda?
-// cp copy qiladi.
-// big io notation
-// data structure algorithms
-// map
-// gorotune
-// parallesim
-// channel
