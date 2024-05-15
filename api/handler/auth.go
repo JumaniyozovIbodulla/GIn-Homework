@@ -4,7 +4,6 @@ import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/pkg"
 	"backend_course/lms/pkg/check"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,9 +28,16 @@ func (h *Handler) TeacherLogin(c *gin.Context) {
 		handleResponse(c, h.Log, "error while binding body", http.StatusBadRequest, err)
 		return
 	}
-	fmt.Println("loginReq: ", loginReq)
 
-	//TODO: need validate login & password
+	if err := check.ValidatePassword(loginReq.Password); err != nil {
+		handleResponse(c, h.Log, "error with password: ", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := check.ValidateEmail(loginReq.Login); err != nil {
+		handleResponse(c, h.Log, "error with email: ", http.StatusBadRequest, err.Error())
+		return
+	}
 
 	loginResp, err := h.Service.Auth().TeacherLogin(c.Request.Context(), loginReq)
 	if err != nil {

@@ -38,6 +38,7 @@ func (s authService) TeacherLogin(ctx context.Context, req models.LoginRequest) 
 	}
 
 	if err = pkg.CompareHashAndPassword(teacher.Password, req.Password); err != nil {
+		s.logger.Error("password is not match: ", logger.Error(err))
 		return resp, errors.New("password doesn't match")
 	}
 
@@ -88,6 +89,6 @@ func (s authService) TeacherRegisterConfirm(ctx context.Context, req models.Regi
 		}
 		return nil
 	}
-	s.logger.Error("code is not match: ", logger.Error(errors.New("code is not match")))
+	s.logger.Error("code is not match or expired code: ")
 	return errors.New("code is not match or expired code")
 }
