@@ -33,9 +33,9 @@ func Load() Config {
 	cfg.PostgresUser = cast.ToString(getOrReturnDefault("POSTGRES_USER", "golang"))
 	cfg.PostgresPassword = cast.ToString(getOrReturnDefault("POSTGRES_PASSWORD", "golang"))
 	cfg.RedisHost = cast.ToString(getOrReturnDefault("REDIS_HOST", "localhost"))
-	cfg.RedisPort = cast.ToString(getOrReturnDefault("REDIS_PORT", "6379"))
+	cfg.RedisPort = cast.ToString(getOrReturnDefault("REDIS_PORT", ""))
 	cfg.RedisPassword = cast.ToString(getOrReturnDefault("REDIS_PASSWORD", "password"))
-	cfg.ServiceName = "LMS"
+	cfg.ServiceName = cast.ToString(getOrReturnDefault("SERVICE_NAME", ""))
 
 	return cfg
 }
