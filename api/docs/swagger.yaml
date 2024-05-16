@@ -93,8 +93,6 @@ definitions:
     type: object
   models.UpdateSubjects:
     properties:
-      created_at:
-        type: string
       name:
         type: string
       type:

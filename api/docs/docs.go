@@ -1578,9 +1578,6 @@ const docTemplate = `{
         "models.UpdateSubjects": {
             "type": "object",
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },

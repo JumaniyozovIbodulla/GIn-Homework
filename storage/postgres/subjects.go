@@ -40,11 +40,11 @@ func (s *subjectsRepo) Update(ctx context.Context, subject models.Subjects) (str
 	UPDATE
 		subjects
 	SET
-		name = $2, type = $3, created_at = $4, updated_at = NOW()
+		name = $2, type = $3, updated_at = NOW()
 	WHERE 
 		id = $1;`
 
-	_, err := s.db.Exec(ctx, query, subject.Id, subject.Name, subject.Type, subject.CreatedAt)
+	_, err := s.db.Exec(ctx, query, subject.Id, subject.Name, subject.Type)
 	if err != nil {
 		return "", err
 	}

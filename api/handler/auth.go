@@ -46,7 +46,6 @@ func (h *Handler) TeacherLogin(c *gin.Context) {
 	}
 
 	handleResponse(c, h.Log, "Succes", http.StatusOK, loginResp)
-
 }
 
 // TeacherRegister godoc

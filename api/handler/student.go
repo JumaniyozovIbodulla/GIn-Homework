@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateStudent godoc
 // @Security ApiKeyAuth
 // @Router		/student [POST]
 // @Summary		create a student
@@ -74,6 +75,7 @@ func (h Handler) CreateStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Created successfully", http.StatusOK, id)
 }
 
+// UpdateStudent godoc
 // @Security ApiKeyAuth
 // @Router		/student/{id} [PUT]
 // @Summary		update a student
@@ -111,6 +113,7 @@ func (h Handler) UpdateStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Updated successfully", http.StatusOK, id)
 }
 
+// UpdateStudentStatus godoc
 // @Security ApiKeyAuth
 // @Router		/student/{id} [PATCH]
 // @Summary		update a student's status
@@ -147,6 +150,7 @@ func (h Handler) UpdateStudentStatus(c *gin.Context) {
 	handleResponse(c, h.Log, "Updated successfully", http.StatusOK, id)
 }
 
+// DeleteStudent godoc
 // @Security ApiKeyAuth
 // @Router		/student/{id} [DELETE]
 // @Summary		delete a student
@@ -173,6 +177,7 @@ func (h Handler) DeleteStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Deleted successfully", http.StatusOK, id)
 }
 
+// GetStudent godoc
 // @Security ApiKeyAuth
 // @Router		/student/{id} [GET]
 // @Summary		get a student
@@ -202,6 +207,7 @@ func (h Handler) GetStudent(c *gin.Context) {
 	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }
 
+// GetAllStudents godoc
 // @Security ApiKeyAuth
 // @Router		/students [GET]
 // @Summary		get  students
@@ -239,7 +245,7 @@ func (h Handler) GetAllStudents(c *gin.Context) {
 	handleResponse(c, h.Log, "request successful", http.StatusOK, resp)
 }
 
-
+// CheckStudentLesson godoc
 // @Security ApiKeyAuth
 // @Router		/check-student/{id} [GET]
 // @Summary		get a student's lesson

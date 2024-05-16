@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// CreateTime godoc
 // @Security ApiKeyAuth
 // @Router		/time [POST]
 // @Summary		create a time table
@@ -37,6 +38,7 @@ func (h Handler) CreateTime(c *gin.Context) {
 	handleResponse(c, h.Log, "Created successfully", http.StatusOK, id)
 }
 
+// UpdateTime godoc
 // @Security ApiKeyAuth
 // @Router		/time/{id} [PUT]
 // @Summary		update a time table
@@ -74,6 +76,7 @@ func (h Handler) UpdateTime(c *gin.Context) {
 	handleResponse(c, h.Log, "Updated successfully", http.StatusOK, id)
 }
 
+// DeleteTime godoc
 // @Security ApiKeyAuth
 // @Router		/time/{id} [DELETE]
 // @Summary		delete a time table
@@ -100,6 +103,7 @@ func (h Handler) DeleteTime(c *gin.Context) {
 	handleResponse(c, h.Log, "Deleted successfully", http.StatusOK, id)
 }
 
+// GetTime godoc
 // @Security ApiKeyAuth
 // @Router		/time/{id} [GET]
 // @Summary		get a time table
@@ -129,6 +133,7 @@ func (h Handler) GetTime(c *gin.Context) {
 	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }
 
+// GetAllTimeTables godoc
 // @Security ApiKeyAuth
 // @Router		/time-tables [GET]
 // @Summary		get  time tables
