@@ -78,6 +78,13 @@ definitions:
       code:
         type: integer
     type: object
+  models.RegisterOTPRequest:
+    properties:
+      code:
+        type: integer
+      teacher:
+        $ref: '#/definitions/models.Teacher'
+    type: object
   models.RegisterRequest:
     properties:
       mail:
@@ -90,6 +97,29 @@ definitions:
         type: string
       statusCode:
         type: integer
+    type: object
+  models.Teacher:
+    properties:
+      created_at:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      mail:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      start_working:
+        type: string
+      subject_id:
+        type: string
+      updated_at:
+        type: string
     type: object
   models.UpdateSubjects:
     properties:
@@ -174,6 +204,108 @@ paths:
       summary: get a teacher's lesson
       tags:
       - teacher
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Teacher login
+      parameters:
+      - description: login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Teacher login
+      tags:
+      - auth
+  /login-otp:
+    post:
+      consumes:
+      - application/json
+      description: Teacher login
+      parameters:
+      - description: login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Teacher login
+      tags:
+      - auth
+  /register-confirm:
+    post:
+      consumes:
+      - application/json
+      description: Teacher register confirm
+      parameters:
+      - description: register
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterConfirmRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Teacher register confirm
+      tags:
+      - auth
   /student:
     post:
       consumes:
@@ -703,40 +835,6 @@ paths:
       summary: update a teacher
       tags:
       - teacher
-  /teacher/login:
-    post:
-      consumes:
-      - application/json
-      description: Teacher login
-      parameters:
-      - description: login
-        in: body
-        name: login
-        required: true
-        schema:
-          $ref: '#/definitions/models.LoginRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/models.LoginResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/models.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.Response'
-      summary: Teacher login
-      tags:
-      - auth
   /teacher/register:
     post:
       consumes:
@@ -769,40 +867,6 @@ paths:
           schema:
             $ref: '#/definitions/models.Response'
       summary: Teacher register
-      tags:
-      - auth
-  /teacher/register-confirm:
-    post:
-      consumes:
-      - application/json
-      description: Teacher register confirm
-      parameters:
-      - description: register
-        in: body
-        name: register
-        required: true
-        schema:
-          $ref: '#/definitions/models.RegisterConfirmRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/models.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/models.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.Response'
-      summary: Teacher register confirm
       tags:
       - auth
   /teachers:

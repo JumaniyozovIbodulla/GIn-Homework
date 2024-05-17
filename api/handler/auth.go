@@ -122,3 +122,32 @@ func (h *Handler) RegisterConfirm(c *gin.Context) {
 	}
 	handleResponse(c, h.Log, "Succes", http.StatusOK, "Your request succeed")
 }
+
+
+// LoginOTP godoc
+// @Router       /login-otp [POST]
+// @Summary      Teacher login 
+// @Description  Teacher login 
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        login body models.RegisterOTPRequest true "login"
+// @Success      201  {object}  models.Response
+// @Failure      400  {object}  models.Response
+// @Failure      404  {object}  models.Response
+// @Failure      500  {object}  models.Response
+func (h *Handler) LoginOTP(c *gin.Context) {
+	loginRegConfirm := models.RegisterOTPRequest{}
+
+	if err := c.ShouldBindJSON(&loginRegConfirm); err != nil {
+		handleResponse(c, h.Log, "error while binding body", http.StatusBadRequest, err)
+		return
+	}
+
+	resp, err := h.Service.Auth().TeacherOTPLogin(c.Request.Context(), loginRegConfirm)
+	if err != nil {
+		handleResponse(c, h.Log, "failed to do login OTP", http.StatusBadRequest, "failed to do login")
+	}
+
+	handleResponse(c, h.Log, "Succes", http.StatusOK, resp)
+}

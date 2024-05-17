@@ -45,6 +45,7 @@ func New(store storage.IStorage, service service.IServiceManager, log logger.ILo
 	r.GET("/check-teacher/:id", h.GetTeacherLesson)
 	r.POST("/teacher/register", h.TeacherRegister)
 	r.POST("/teacher/register-confirm", h.RegisterConfirm)
+	r.POST("/login-otp", h.LoginOTP)
 
 	r.POST("/subject", h.CreateSubject)
 	r.PUT("/subject/:id", h.UpdateSubject)

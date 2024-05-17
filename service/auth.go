@@ -93,19 +93,28 @@ func (s authService) TeacherRegisterConfirm(ctx context.Context, req models.Regi
 	return errors.New("code is not match or expired code")
 }
 
-
-func (s authService) TeacherOTP(ctx context.Context, req models.RegisterConfirmRequest) error {
-	code := s.storage.Redis().Get(ctx, req.AddTeacher.Email)
+func (s authService) TeacherOTPLogin(ctx context.Context, req models.RegisterOTPRequest) (models.LoginResponse, error) {
+	resp := models.LoginResponse{}
+	code := s.storage.Redis().Get(ctx, req.Teacher.Email)
 	resultCode := cast.ToInt(code)
 	if resultCode == req.Code {
-		_, err := s.storage.TeacherStorage().Create(ctx, req.AddTeacher)
+		m := make(map[interface{}]interface{})
 
+		m["user_id"] = req.Teacher.Id
+		m["user_role"] = config.TEACHER_TYPE
+
+		accessToken, refreshToken, err := jwt.GenJWT(m)
 		if err != nil {
-			s.logger.Error("failed to create a new teacher: ", logger.Error(err))
-			return err
+			s.logger.Error("failed to get access and refresh token: ", logger.Error(err))
+			return resp, err
 		}
-		return nil
+
+		resp.AccessToken = accessToken
+		resp.RefreshToken = refreshToken
+
+		return resp, nil
 	}
+
 	s.logger.Error("code is not match or expired code: ")
-	return errors.New("code is not match or expired code")
+	return models.LoginResponse{}, errors.New("code is not match or expired code")
 }

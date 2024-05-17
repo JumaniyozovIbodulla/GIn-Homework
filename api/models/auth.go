@@ -29,3 +29,9 @@ type RegisterConfirmRequest struct {
 	AddTeacher AddTeacher
 	Code       int `json:"code"`
 }
+
+
+type RegisterOTPRequest struct {
+	Teacher Teacher
+	Code       int `json:"code"`
+}
