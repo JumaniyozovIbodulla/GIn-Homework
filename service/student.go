@@ -68,7 +68,6 @@ func (s studentService) GetAll(ctx context.Context, req models.GetAllStudentsReq
 		s.logger.Error("failed to get all students: ", logger.Error(err))
 		return res, err
 	}
-
 	return res, nil
 }
 

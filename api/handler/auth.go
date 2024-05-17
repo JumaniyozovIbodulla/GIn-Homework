@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TeacherLogin godoc
-// @Router       /teacher/login [POST]
+// Login godoc
+// @Router       /login [POST]
 // @Summary      Teacher login
 // @Description  Teacher login
 // @Tags         auth
@@ -21,7 +21,7 @@ import (
 // @Failure      400  {object}  models.Response
 // @Failure      404  {object}  models.Response
 // @Failure      500  {object}  models.Response
-func (h *Handler) TeacherLogin(c *gin.Context) {
+func (h *Handler) Login(c *gin.Context) {
 	loginReq := models.LoginRequest{}
 
 	if err := c.ShouldBindJSON(&loginReq); err != nil {
@@ -39,7 +39,7 @@ func (h *Handler) TeacherLogin(c *gin.Context) {
 		return
 	}
 
-	loginResp, err := h.Service.Auth().TeacherLogin(c.Request.Context(), loginReq)
+	loginResp, err := h.Service.Auth().Login(c.Request.Context(), loginReq)
 	if err != nil {
 		handleResponse(c, h.Log, "unauthorized", http.StatusBadRequest, err.Error())
 		return
@@ -82,8 +82,8 @@ func (h *Handler) TeacherRegister(c *gin.Context) {
 	handleResponse(c, h.Log, "Succes", http.StatusOK, "Your request succeed")
 }
 
-// TeacherRegister godoc
-// @Router       /teacher/register-confirm [POST]
+// RegisterConfirm godoc
+// @Router       /register-confirm [POST]
 // @Summary      Teacher register confirm
 // @Description  Teacher register confirm
 // @Tags         auth
@@ -94,7 +94,7 @@ func (h *Handler) TeacherRegister(c *gin.Context) {
 // @Failure      400  {object}  models.Response
 // @Failure      404  {object}  models.Response
 // @Failure      500  {object}  models.Response
-func (h *Handler) TeacherRegisterConfirm(c *gin.Context) {
+func (h *Handler) RegisterConfirm(c *gin.Context) {
 	loginRegConfirm := models.RegisterConfirmRequest{}
 
 	if err := c.ShouldBindJSON(&loginRegConfirm); err != nil {

@@ -5,6 +5,12 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+type LoginRequestCode struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Code     int    `json:"code"`
+}
+
 type LoginResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
@@ -21,5 +27,5 @@ type RegisterRequest struct {
 
 type RegisterConfirmRequest struct {
 	AddTeacher AddTeacher
-	Code int `json:"code"`
+	Code       int `json:"code"`
 }

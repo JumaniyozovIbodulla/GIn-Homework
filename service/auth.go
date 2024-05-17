@@ -28,7 +28,7 @@ func NewAuthService(storage storage.IStorage, logger logger.ILogger) authService
 	}
 }
 
-func (s authService) TeacherLogin(ctx context.Context, req models.LoginRequest) (models.LoginResponse, error) {
+func (s authService) Login(ctx context.Context, req models.LoginRequest) (models.LoginResponse, error) {
 	resp := models.LoginResponse{}
 
 	teacher, err := s.storage.TeacherStorage().GetTeacherByLogin(ctx, req.Login)
@@ -78,6 +78,23 @@ func (s authService) TeacherRegister(ctx context.Context, req models.RegisterReq
 }
 
 func (s authService) TeacherRegisterConfirm(ctx context.Context, req models.RegisterConfirmRequest) error {
+	code := s.storage.Redis().Get(ctx, req.AddTeacher.Email)
+	resultCode := cast.ToInt(code)
+	if resultCode == req.Code {
+		_, err := s.storage.TeacherStorage().Create(ctx, req.AddTeacher)
+
+		if err != nil {
+			s.logger.Error("failed to create a new teacher: ", logger.Error(err))
+			return err
+		}
+		return nil
+	}
+	s.logger.Error("code is not match or expired code: ")
+	return errors.New("code is not match or expired code")
+}
+
+
+func (s authService) TeacherOTP(ctx context.Context, req models.RegisterConfirmRequest) error {
 	code := s.storage.Redis().Get(ctx, req.AddTeacher.Email)
 	resultCode := cast.ToInt(code)
 	if resultCode == req.Code {

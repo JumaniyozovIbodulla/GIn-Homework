@@ -3,10 +3,10 @@ package handler
 import (
 	"backend_course/lms/api/models"
 	"backend_course/lms/config"
+	"backend_course/lms/pkg/jwt"
 	"backend_course/lms/pkg/logger"
 	"backend_course/lms/service"
 	"backend_course/lms/storage"
-	"backend_course/lms/pkg/jwt"
 	"errors"
 	"fmt"
 	"strconv"
