@@ -30,8 +30,8 @@ type RegisterConfirmRequest struct {
 	Code       int `json:"code"`
 }
 
-
 type RegisterOTPRequest struct {
-	Teacher Teacher
-	Code       int `json:"code"`
+	Id    string `json:"id"`
+	Email string `json:"email"`
+	Code  int    `json:"code"`
 }

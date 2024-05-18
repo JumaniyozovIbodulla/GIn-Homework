@@ -95,12 +95,14 @@ func (s authService) TeacherRegisterConfirm(ctx context.Context, req models.Regi
 
 func (s authService) TeacherOTPLogin(ctx context.Context, req models.RegisterOTPRequest) (models.LoginResponse, error) {
 	resp := models.LoginResponse{}
-	code := s.storage.Redis().Get(ctx, req.Teacher.Email)
+
+	code := s.storage.Redis().Get(ctx, req.Email)
 	resultCode := cast.ToInt(code)
 	if resultCode == req.Code {
+		
 		m := make(map[interface{}]interface{})
 
-		m["user_id"] = req.Teacher.Id
+		m["user_id"] = req.Id
 		m["user_role"] = config.TEACHER_TYPE
 
 		accessToken, refreshToken, err := jwt.GenJWT(m)

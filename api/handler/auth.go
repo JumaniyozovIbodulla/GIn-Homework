@@ -148,6 +148,5 @@ func (h *Handler) LoginOTP(c *gin.Context) {
 	if err != nil {
 		handleResponse(c, h.Log, "failed to do login OTP", http.StatusBadRequest, "failed to do login")
 	}
-
 	handleResponse(c, h.Log, "Succes", http.StatusOK, resp)
 }

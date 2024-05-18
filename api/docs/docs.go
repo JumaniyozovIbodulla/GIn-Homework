@@ -1613,8 +1613,11 @@ const docTemplate = `{
                 "code": {
                     "type": "integer"
                 },
-                "teacher": {
-                    "$ref": "#/definitions/models.Teacher"
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
                 }
             }
         },
@@ -1635,41 +1638,6 @@ const docTemplate = `{
                 },
                 "statusCode": {
                     "type": "integer"
-                }
-            }
-        },
-        "models.Teacher": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "mail": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "start_working": {
-                    "type": "string"
-                },
-                "subject_id": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
                 }
             }
         },
