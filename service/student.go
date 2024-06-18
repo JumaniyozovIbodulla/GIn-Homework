@@ -89,3 +89,22 @@ func (s studentService) CheckStudentLesson(ctx context.Context, id string) (mode
 	}
 	return checkStudent, nil
 }
+
+func (s studentService) GetAllStudentsAttandenceReport(ctx context.Context, req models.GetAllStudentsAttandenceReportRequest) (models.GetAllStudentsAttandenceReportResponse, error) {
+	resp, err := s.storage.StudentStorage().GetAllStudentsAttandenceReport(ctx, req)
+
+	if err != nil {
+		return resp, err
+	}
+	return resp, nil
+}
+
+func (s studentService) UploadImage(ctx context.Context, path models.UploadStudentImage) error {
+	
+	err := s.storage.StudentStorage().UploadImage(ctx, path)
+	if err != nil {
+		s.logger.Error("failed to upload student's image: ", logger.Error(err))
+		return err
+	}
+	return nil
+}

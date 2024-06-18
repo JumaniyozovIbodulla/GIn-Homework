@@ -8,7 +8,6 @@ import (
 	"backend_course/lms/service"
 	"backend_course/lms/storage"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -92,7 +91,6 @@ func getAuthInfo(c *gin.Context) (models.AuthInfo, error) {
 		return models.AuthInfo{}, err
 	}
 
-	fmt.Println("m: ", m)
 	role := m["user_role"].(string)
 	if !(role == config.TEACHER_TYPE || role == config.STUDENT_TYPE) {
 		return models.AuthInfo{}, errors.New("unauthorized")

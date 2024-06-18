@@ -23,6 +23,8 @@ type StudentStorage interface {
 	GetStudent(ctx context.Context, id string) (models.GetStudent, error)
 	GetAll(ctx context.Context, req models.GetAllStudentsRequest) (models.GetAllStudentsResponse, error)
 	CheckStudentLesson(ctx context.Context, id string) (models.CheckLessonStudent, error)
+	GetAllStudentsAttandenceReport(ctx context.Context, req models.GetAllStudentsAttandenceReportRequest) (models.GetAllStudentsAttandenceReportResponse, error)
+	UploadImage(ctx context.Context, path models.UploadStudentImage) error
 }
 
 type TeacherStorage interface {

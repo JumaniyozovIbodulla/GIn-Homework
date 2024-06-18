@@ -57,6 +57,21 @@ definitions:
       to_date:
         type: string
     type: object
+  models.GetAllStudentsAttandenceReportRequest:
+    properties:
+      end_date:
+        type: string
+      limit:
+        type: integer
+      page:
+        type: integer
+      start_date:
+        type: string
+      student_id:
+        type: string
+      teacher_id:
+        type: string
+    type: object
   models.LoginRequest:
     properties:
       login:
@@ -319,6 +334,82 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: create a student
+      tags:
+      - student
+  /student-attendence/{id}:
+    get:
+      consumes:
+      - application/json
+      description: This api get a student's attendance
+      parameters:
+      - description: student
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/models.GetAllStudentsAttandenceReportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: get a student's lesson
+      tags:
+      - student
+  /student-photo/{id}:
+    patch:
+      consumes:
+      - multipart/form-data
+      description: This api upload student's photo
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'student''s image '
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: upload a student's profile photo
       tags:
       - student
   /student/{id}:

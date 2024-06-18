@@ -270,3 +270,92 @@ func (h Handler) CheckStudentLesson(c *gin.Context) {
 
 	handleResponse(c, h.Log, "Got successfully", http.StatusOK, std)
 }
+
+// GetAllStudentsAttandenceReport godoc
+// @Security ApiKeyAuth
+// @Router		/student-attendence/{id} [GET]
+// @Summary		get a student's lesson
+// @Description	This api get a student's attendance
+// @Tags		student
+// @Accept		json
+// @Produce		json
+// Param 		page query integer true "page"
+// Param 		limit query integer true "limit"
+// Param 		all query bool true "all"
+// Param 		search query string true "search"
+// @Param		student body models.GetAllStudentsAttandenceReportRequest true "student"
+// @Success		200  {object}  models.Response
+// @Failure		400  {object}  models.Response
+// @Failure		404  {object}  models.Response
+// @Failure		500  {object}  models.Response
+func (h Handler) GetAllStudentsAttandenceReport(c *gin.Context) {
+
+	student := models.GetAllStudentsAttandenceReportRequest{}
+
+	if err := c.ShouldBindJSON(&student); err != nil {
+		handleResponse(c, h.Log, "error while reading request body", http.StatusBadRequest, err.Error())
+		return
+	}
+	resp, err := h.Service.Student().GetAllStudentsAttandenceReport(c.Request.Context(), student)
+	if err != nil {
+		handleResponse(c, h.Log, "error while getting student's attendance", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	handleResponse(c, h.Log, "Got successfully", http.StatusOK, resp)
+}
+
+// UploadStudentPhoto godoc
+// @Security ApiKeyAuth
+// @Router		/student-photo/{id} [PATCH]
+// @Summary 	upload a student's profile photo
+// @Description This api upload student's photo
+// @Tags		student
+// @Accept		multipart/form-data
+// @Produce		json
+// @Param		id path string true "id"
+// @Param 		image formData file true "student's image "
+// @Success		200  {object}  models.Response
+// @Failure		400  {object}  models.Response
+// @Failure		404  {object}  models.Response
+// @Failure		500  {object}  models.Response
+func (h Handler) UploadStudentPhoto(c *gin.Context) {
+	id := c.Param("id")
+	if err := uuid.Validate(id); err != nil {
+		handleResponse(c, h.Log, "error while validating studentId", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	file, err := c.FormFile("file")
+
+	if err != nil {
+		handleResponse(c, h.Log, "error while uploding student's image", http.StatusBadRequest, err.Error())
+		return
+	}
+	if file.Header.Get("Content-Type") != "image/jpeg" {
+		handleResponse(c, h.Log, "file type is not valid", http.StatusBadRequest, "File type is not valid")
+		return
+	}
+
+	uploadPath := "media/studentsPhotos/"
+
+	err = c.SaveUploadedFile(file, uploadPath+file.Filename)
+
+	if err != nil {
+		handleResponse(c, h.Log, "could't save student's image", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	path := models.UploadStudentImage{
+		Id:   id,
+		Path: uploadPath + file.Filename,
+	}
+	err = h.Service.Student().UploadImage(c.Request.Context(), path)
+
+	if err != nil {
+		handleResponse(c, h.Log, "could't save to database", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	handleResponse(c, h.Log, "Student's image saved successfully", http.StatusOK, uploadPath+file.Filename)
+}

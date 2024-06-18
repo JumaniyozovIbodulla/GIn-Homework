@@ -10,6 +10,7 @@ import (
 	"context"
 )
 
+
 func main() {
 	cfg := config.Load()
 	log := logger.New(cfg.ServiceName)
